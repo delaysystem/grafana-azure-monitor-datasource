@@ -51,6 +51,8 @@ This project adheres to the [Grafana Code of Conduct](https://github.com/grafana
 
 ## Local development environment
 
+TODO: fix this, it's not true
+
 `npm run server` starts a local Azure Monitor instance and a Grafana instance with the plugin pre-provisioned:
 
 ```shell

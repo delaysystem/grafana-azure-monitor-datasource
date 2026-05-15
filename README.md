@@ -5,8 +5,7 @@
 
 ## Overview
 
-Data source for Microsoft Azure Monitor & Application Insights. — a 1-2 sentence description of what this datasource does
-and what systems it connects to.
+Data source for Microsoft Azure Monitor & Application Insights
 
 ## Requirements
 
