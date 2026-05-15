@@ -1,8 +1,6 @@
 module github.com/grafana/grafana-azure-monitor-datasource
 
-go 1.25.7
-
-replace github.com/grafana/grafana-azure-monitor-datasource => /Users/njv/Code/wave/tern/external-repos/grafana-azure-monitor-datasource
+go 1.26.3
 
 require (
 	github.com/andybalholm/brotli v1.2.0
