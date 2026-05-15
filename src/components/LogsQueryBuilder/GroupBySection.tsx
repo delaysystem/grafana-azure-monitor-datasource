@@ -9,7 +9,7 @@ import {
   BuilderQueryEditorExpressionType,
   type BuilderQueryEditorGroupByExpression,
   BuilderQueryEditorPropertyType,
-} from '../../dataquery.gen';
+} from '../../dataquery';
 import { type AzureLogAnalyticsMetadataColumn } from '../../types/logAnalyticsMetadata';
 import { type AzureMonitorQuery } from '../../types/query';
 

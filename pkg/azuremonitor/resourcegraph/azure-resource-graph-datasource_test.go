@@ -16,8 +16,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/loganalytics"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/types"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/loganalytics"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/types"
 )
 
 func TestBuildingAzureResourceGraphQueries(t *testing.T) {

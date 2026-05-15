@@ -3,7 +3,7 @@ import { produce } from 'immer';
 import { getTemplateSrv } from '@grafana/runtime';
 
 import UrlBuilder from '../../azure_monitor/url_builder';
-import { type AzureMonitorResource } from '../../dataquery.gen';
+import { type AzureMonitorResource } from '../../dataquery';
 import { type ResourcePickerQueryType } from '../../resourcePicker/resourcePickerData';
 import { type AzureMonitorQuery } from '../../types/query';
 

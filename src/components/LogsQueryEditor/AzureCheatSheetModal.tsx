@@ -3,7 +3,7 @@ import { t } from '@grafana/i18n';
 import { Modal } from '@grafana/ui';
 
 import type AzureLogAnalyticsDatasource from '../../azure_log_analytics/azure_log_analytics_datasource';
-import { type AzureMonitorQuery } from '../../dataquery.gen';
+import { type AzureMonitorQuery } from '../../dataquery';
 
 import AzureCheatSheet from './AzureCheatSheet';
 

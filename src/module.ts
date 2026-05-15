@@ -4,7 +4,7 @@ import { getAppEvents } from '@grafana/runtime';
 
 import { ConfigEditor } from './components/ConfigEditor/ConfigEditor';
 import AzureMonitorQueryEditor from './components/QueryEditor/QueryEditor';
-import { AzureQueryType, ResultFormat } from './dataquery.gen';
+import { AzureQueryType, ResultFormat } from './dataquery';
 import Datasource from './datasource';
 import pluginJson from './plugin.json';
 import { trackAzureMonitorDashboardLoaded } from './tracking';

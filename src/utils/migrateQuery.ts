@@ -4,7 +4,7 @@ import {
   setTimeGrain as setMetricsTimeGrain,
 } from '../components/MetricsQueryEditor/setQueryValue';
 import { parseResourceDetails } from '../components/ResourcePicker/utils';
-import { type AzureMetricDimension, AzureQueryType } from '../dataquery.gen';
+import { type AzureMetricDimension, AzureQueryType } from '../dataquery';
 import TimegrainConverter from '../time_grain_converter';
 import { type AzureMonitorQuery } from '../types/query';
 

@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import { dateTime, LoadingState } from '@grafana/data';
 
-import { ResultFormat } from '../../dataquery.gen';
+import { ResultFormat } from '../../dataquery';
 import createMockDatasource from '../../mocks/datasource';
 import createMockQuery from '../../mocks/query';
 import { type EngineSchema } from '../../types/types';

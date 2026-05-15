@@ -22,13 +22,17 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/config"
 	schemas "github.com/grafana/schemads"
 
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/azmoncredentials"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/loganalytics"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/metrics"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/resourcegraph"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/types"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/utils"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/azmoncredentials"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/loganalytics"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/metrics"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/resourcegraph"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/types"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/utils"
 )
+
+func NewDatasource(_ context.Context, _ backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
+	return ProvideService(httpclient.NewProvider()), nil
+}
 
 func ProvideService(httpClientProvider *httpclient.Provider) *Service {
 	logger := backend.NewLoggerWith("logger", "tsdb.azuremonitor")

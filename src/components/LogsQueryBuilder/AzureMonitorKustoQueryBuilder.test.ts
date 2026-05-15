@@ -1,4 +1,4 @@
-import { BuilderQueryEditorExpressionType, type BuilderQueryExpression } from '../../dataquery.gen';
+import { BuilderQueryEditorExpressionType, type BuilderQueryExpression } from '../../dataquery';
 
 import { AzureMonitorKustoQueryBuilder } from './AzureMonitorKustoQueryBuilder';
 

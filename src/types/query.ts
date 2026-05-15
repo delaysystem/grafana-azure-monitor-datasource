@@ -1,4 +1,4 @@
-import { type AzureMonitorQuery as AzureMonitorQueryBase, type AzureQueryType } from '../dataquery.gen';
+import { type AzureMonitorQuery as AzureMonitorQueryBase, type AzureQueryType } from '../dataquery';
 
 /**
  * Represents the query as it moves through the frontend query editor and datasource files.

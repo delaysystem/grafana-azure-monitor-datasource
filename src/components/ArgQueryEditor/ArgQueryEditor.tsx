@@ -6,7 +6,7 @@ import { t } from '@grafana/i18n';
 import { EditorFieldGroup, EditorRow, EditorRows } from '@grafana/plugin-ui';
 import { Combobox } from '@grafana/ui';
 
-import { ARGScope } from '../../dataquery.gen';
+import { ARGScope } from '../../dataquery';
 import type Datasource from '../../datasource';
 import { selectors } from '../../e2e/selectors';
 import { type AzureMonitorQuery } from '../../types/query';

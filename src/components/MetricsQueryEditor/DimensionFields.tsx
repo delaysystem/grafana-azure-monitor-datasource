@@ -5,7 +5,7 @@ import { t } from '@grafana/i18n';
 import { EditorList, AccessoryButton } from '@grafana/plugin-ui';
 import { Select, Stack, MultiSelect } from '@grafana/ui';
 
-import { type AzureMetricDimension } from '../../dataquery.gen';
+import { type AzureMetricDimension } from '../../dataquery';
 import { type AzureMonitorQuery } from '../../types/query';
 import { type AzureMonitorOption, type AzureQueryEditorFieldProps } from '../../types/types';
 import { Field } from '../shared/Field';

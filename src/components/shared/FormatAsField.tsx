@@ -5,7 +5,7 @@ import { type SelectableValue } from '@grafana/data';
 import { t } from '@grafana/i18n';
 import { Select } from '@grafana/ui';
 
-import { type ResultFormat } from '../../dataquery.gen';
+import { type ResultFormat } from '../../dataquery';
 import { selectors } from '../../e2e/selectors';
 import { type FormatAsFieldProps } from '../../types/types';
 

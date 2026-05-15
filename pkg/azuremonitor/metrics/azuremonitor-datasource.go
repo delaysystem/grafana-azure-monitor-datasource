@@ -20,11 +20,11 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/kinds/dataquery"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/loganalytics"
-	azTime "github.com/grafana/grafana/pkg/tsdb/azuremonitor/time"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/types"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/utils"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/kinds/dataquery"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/loganalytics"
+	azTime "github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/time"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/types"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/utils"
 )
 
 // AzureMonitorDatasource calls the Azure Monitor API - one of the four API's supported

@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Trans, t } from '@grafana/i18n';
 import { Button, Icon, Modal, useStyles2, type IconName } from '@grafana/ui';
 
-import { type AzureMonitorResource } from '../../dataquery.gen';
+import { type AzureMonitorResource } from '../../dataquery';
 import type Datasource from '../../datasource';
 import { selectors } from '../../e2e/selectors';
 import { type ResourcePickerQueryType } from '../../resourcePicker/resourcePickerData';

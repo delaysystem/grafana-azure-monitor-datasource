@@ -5,7 +5,7 @@ import { t } from '@grafana/i18n';
 import { EditorField, EditorFieldGroup, EditorRow, InputGroup } from '@grafana/plugin-ui';
 import { Button, Select } from '@grafana/ui';
 
-import { BuilderQueryEditorExpressionType, BuilderQueryEditorPropertyType } from '../../dataquery.gen';
+import { BuilderQueryEditorExpressionType, BuilderQueryEditorPropertyType } from '../../dataquery';
 import {
   type AzureLogAnalyticsMetadataColumn,
   type AzureLogAnalyticsMetadataTable,

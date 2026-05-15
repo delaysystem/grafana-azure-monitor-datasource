@@ -14,7 +14,7 @@ import {
   parseResourceURI,
   resourceToString,
 } from '../components/ResourcePicker/utils';
-import { type AzureMonitorResource } from '../dataquery.gen';
+import { type AzureMonitorResource } from '../dataquery';
 import { type AzureMonitorQuery } from '../types/query';
 import {
   type AzureMonitorDataSourceInstanceSettings,

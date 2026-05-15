@@ -1,6 +1,6 @@
 import { type SelectableValue } from '@grafana/data';
 
-import { AzureQueryType, type AzureTracesFilter, type ResultFormat } from '../../dataquery.gen';
+import { AzureQueryType, type AzureTracesFilter, type ResultFormat } from '../../dataquery';
 import { type AzureMonitorQuery } from '../../types/query';
 
 // Used when switching from a traces exemplar query to a standard Azure Traces query

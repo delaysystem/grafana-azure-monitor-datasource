@@ -8,7 +8,7 @@ import { getTemplateSrv } from '@grafana/runtime';
 import { Alert, Field, Select, Space } from '@grafana/ui';
 
 import UrlBuilder from '../../azure_monitor/url_builder';
-import { AzureQueryType } from '../../dataquery.gen';
+import { AzureQueryType } from '../../dataquery';
 import type DataSource from '../../datasource';
 import { selectors } from '../../e2e/selectors';
 import { migrateQuery } from '../../grafanaTemplateVariableFns';

@@ -1,4 +1,4 @@
-import { type AzureMetricDimension } from '../../dataquery.gen';
+import { type AzureMetricDimension } from '../../dataquery';
 import { type AzureMonitorQuery } from '../../types/query';
 
 export function setCustomNamespace(query: AzureMonitorQuery, selection: string | undefined): AzureMonitorQuery {

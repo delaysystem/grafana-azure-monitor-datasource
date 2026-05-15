@@ -2,7 +2,7 @@ import { from, lastValueFrom } from 'rxjs';
 
 import { type DataQueryRequest, toDataFrame } from '@grafana/data';
 
-import { AzureQueryType } from './dataquery.gen';
+import { AzureQueryType } from './dataquery';
 import createMockDatasource from './mocks/datasource';
 import { invalidSubscriptionError } from './mocks/errors';
 import { type AzureMonitorQuery } from './types/query';

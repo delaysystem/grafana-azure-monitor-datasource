@@ -1,4 +1,4 @@
-import { AzureQueryType, ResultFormat } from '../dataquery.gen';
+import { AzureQueryType, ResultFormat } from '../dataquery';
 import { type AzureMonitorQuery } from '../types/query';
 
 export default function createMockQuery(overrides?: Partial<AzureMonitorQuery>): AzureMonitorQuery {

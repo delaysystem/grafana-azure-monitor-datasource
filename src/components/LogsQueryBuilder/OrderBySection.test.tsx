@@ -7,7 +7,7 @@ import {
   type BuilderQueryEditorOrderByExpression,
   BuilderQueryEditorOrderByOptions,
   BuilderQueryEditorPropertyType,
-} from '../../dataquery.gen';
+} from '../../dataquery';
 import { type AzureMonitorQuery } from '../../types/query';
 
 import { OrderBySection } from './OrderBySection';

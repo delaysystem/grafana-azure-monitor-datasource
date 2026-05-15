@@ -5,7 +5,7 @@ import {
   BuilderQueryEditorExpressionType,
   BuilderQueryEditorPropertyType,
   type BuilderQueryEditorWhereExpressionItems,
-} from '../../dataquery.gen';
+} from '../../dataquery';
 
 import { FilterItem } from './FilterItem';
 

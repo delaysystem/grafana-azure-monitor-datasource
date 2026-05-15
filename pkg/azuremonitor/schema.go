@@ -15,10 +15,10 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	schemas "github.com/grafana/schemads"
 
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/metrics"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/resourcegraph"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/types"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/utils"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/metrics"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/resourcegraph"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/types"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/utils"
 )
 
 const (

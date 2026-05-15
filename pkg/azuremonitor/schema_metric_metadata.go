@@ -18,8 +18,8 @@ import (
 	apidata "github.com/grafana/grafana-plugin-sdk-go/experimental/apis/datasource/v0alpha1"
 	schemas "github.com/grafana/schemads"
 
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/metrics"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/types"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/metrics"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/types"
 )
 
 const (

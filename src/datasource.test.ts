@@ -1,4 +1,4 @@
-import { AzureQueryType } from './dataquery.gen';
+import { AzureQueryType } from './dataquery';
 import Datasource from './datasource';
 import { createMockInstanceSetttings } from './mocks/instanceSettings';
 import createMockQuery from './mocks/query';

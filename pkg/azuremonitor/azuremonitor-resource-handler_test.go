@@ -8,8 +8,8 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/metrics"
-	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/types"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/metrics"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/types"
 
 	"github.com/stretchr/testify/require"
 )

@@ -13,7 +13,7 @@ import { getTemplateSrv, type TemplateSrv } from '@grafana/runtime';
 import UrlBuilder from './azure_monitor/url_builder';
 import { parseResourceURI } from './components/ResourcePicker/utils';
 import VariableEditor from './components/VariableEditor/VariableEditor';
-import { AzureQueryType, type GrafanaTemplateVariableQuery } from './dataquery.gen';
+import { AzureQueryType, type GrafanaTemplateVariableQuery } from './dataquery';
 import type DataSource from './datasource';
 import { migrateQuery } from './grafanaTemplateVariableFns';
 import { type AzureMonitorQuery } from './types/query';

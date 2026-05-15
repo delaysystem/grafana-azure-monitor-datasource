@@ -14,7 +14,7 @@ import {
   type BuilderQueryEditorOrderByExpression,
   type BuilderQueryEditorPropertyExpression,
   type BuilderQueryExpression,
-} from '../../dataquery.gen';
+} from '../../dataquery';
 import type Datasource from '../../datasource';
 import { selectors } from '../../e2e/selectors';
 import {

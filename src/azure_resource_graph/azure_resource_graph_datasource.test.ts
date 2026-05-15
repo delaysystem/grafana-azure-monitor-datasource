@@ -2,7 +2,7 @@ import { get, set } from 'lodash';
 
 import { type CustomVariableModel } from '@grafana/data';
 
-import { AzureQueryType } from '../dataquery.gen';
+import { AzureQueryType } from '../dataquery';
 import { type Context, createContext } from '../mocks/datasource';
 import { createMockInstanceSetttings } from '../mocks/instanceSettings';
 import createMockQuery from '../mocks/query';

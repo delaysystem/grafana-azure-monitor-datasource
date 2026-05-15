@@ -6,7 +6,7 @@ import { DataSourceWithBackend, getTemplateSrv, type TemplateSrv } from '@grafan
 
 import ResponseParser from '../azure_monitor/response_parser';
 import { getCredentials } from '../credentials';
-import { AzureQueryType } from '../dataquery.gen';
+import { AzureQueryType } from '../dataquery';
 import { type AzureMonitorQuery } from '../types/query';
 import {
   type AzureMonitorDataSourceJsonData,

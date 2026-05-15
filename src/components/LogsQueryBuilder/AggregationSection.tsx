@@ -4,7 +4,7 @@ import { type SelectableValue } from '@grafana/data';
 import { t } from '@grafana/i18n';
 import { EditorField, EditorFieldGroup, EditorList, EditorRow } from '@grafana/plugin-ui';
 
-import { type BuilderQueryEditorReduceExpression, BuilderQueryEditorReduceParameterTypes } from '../../dataquery.gen';
+import { type BuilderQueryEditorReduceExpression, BuilderQueryEditorReduceParameterTypes } from '../../dataquery';
 import { type AzureLogAnalyticsMetadataColumn } from '../../types/logAnalyticsMetadata';
 import { type AzureMonitorQuery } from '../../types/query';
 

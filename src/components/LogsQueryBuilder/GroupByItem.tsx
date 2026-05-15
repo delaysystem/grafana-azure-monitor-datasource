@@ -9,7 +9,7 @@ import {
   type BuilderQueryEditorGroupByExpression,
   BuilderQueryEditorPropertyType,
   BuilderQueryEditorExpressionType,
-} from '../../dataquery.gen';
+} from '../../dataquery';
 
 import { inputFieldSize } from './utils';
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { rangeUtil } from '@grafana/data';
 
-import { type AzureMonitorResource } from '../../dataquery.gen';
+import { type AzureMonitorResource } from '../../dataquery';
 import type Datasource from '../../datasource';
 import TimegrainConverter from '../../time_grain_converter';
 import { type AzureMonitorQuery } from '../../types/query';

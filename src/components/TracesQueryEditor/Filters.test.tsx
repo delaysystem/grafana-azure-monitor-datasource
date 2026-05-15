@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 
 import { CoreApp } from '@grafana/data';
 
-import { AzureQueryType } from '../../dataquery.gen';
+import { AzureQueryType } from '../../dataquery';
 import type Datasource from '../../datasource';
 import createMockDatasource from '../../mocks/datasource';
 import createMockQuery from '../../mocks/query';

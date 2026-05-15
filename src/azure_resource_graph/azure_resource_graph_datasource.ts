@@ -4,7 +4,7 @@ import { type ScopedVars } from '@grafana/data';
 import { DataSourceWithBackend, getTemplateSrv, type TemplateSrv } from '@grafana/runtime';
 
 import { resourceTypes } from '../azureMetadata/resourceTypes';
-import { ARGScope, AzureQueryType } from '../dataquery.gen';
+import { ARGScope, AzureQueryType } from '../dataquery';
 import { createFilter } from '../resourcePicker/resourcePickerData';
 import { type AzureMonitorQuery } from '../types/query';
 import {

@@ -3,7 +3,7 @@ import {
   type BuilderQueryEditorWhereExpressionArray,
   type BuilderQueryEditorWhereExpressionItems,
   type BuilderQueryExpression,
-} from '../../dataquery.gen';
+} from '../../dataquery';
 
 const isNestedExpression = (
   exp: BuilderQueryEditorWhereExpression | BuilderQueryEditorWhereExpressionItems

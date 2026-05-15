@@ -1,4 +1,4 @@
-import { AzureQueryType } from './dataquery.gen';
+import { AzureQueryType } from './dataquery';
 import { migrateQuery, migrateStringQueriesToObjectQueries } from './grafanaTemplateVariableFns';
 import createMockDatasource from './mocks/datasource';
 import { type AzureMonitorQuery } from './types/query';

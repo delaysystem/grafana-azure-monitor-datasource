@@ -9,7 +9,7 @@ import {
   type TimeRange,
 } from '@grafana/data';
 
-import { type ResultFormat } from '../dataquery.gen';
+import { type ResultFormat } from '../dataquery';
 import type Datasource from '../datasource';
 
 import { type AzureLogAnalyticsMetadataTable } from './logAnalyticsMetadata';

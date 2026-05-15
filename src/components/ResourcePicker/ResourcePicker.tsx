@@ -24,7 +24,7 @@ import {
 } from '@grafana/ui';
 
 import { resourceTypeDisplayNames } from '../../azureMetadata/resourceTypes';
-import { type AzureMonitorResource } from '../../dataquery.gen';
+import { type AzureMonitorResource } from '../../dataquery';
 import type Datasource from '../../datasource';
 import { selectors } from '../../e2e/selectors';
 import {

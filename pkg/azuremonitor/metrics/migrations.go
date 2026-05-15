@@ -1,6 +1,6 @@
 package metrics
 
-import "github.com/grafana/grafana/pkg/tsdb/azuremonitor/kinds/dataquery"
+import "github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/kinds/dataquery"
 
 func MigrateDimensionFilters(filters []dataquery.AzureMetricDimension) []dataquery.AzureMetricDimension {
 	var newFilters []dataquery.AzureMetricDimension

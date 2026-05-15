@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import FakeSchemaData from '../../azure_log_analytics/mocks/schema';
-import { LogsEditorMode } from '../../dataquery.gen';
+import { LogsEditorMode } from '../../dataquery';
 import createMockDatasource from '../../mocks/datasource';
 import createMockQuery from '../../mocks/query';
 

@@ -10,7 +10,7 @@ import {
   type ResourceNamesQuery,
   type SubscriptionsQuery,
   type WorkspacesQuery,
-} from './dataquery.gen';
+} from './dataquery';
 import type DataSource from './datasource';
 import { type AzureMonitorQuery } from './types/query';
 

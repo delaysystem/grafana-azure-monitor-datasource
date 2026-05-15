@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import { mockComboboxRect } from '@grafana/test-utils';
 
-import { ARGScope } from '../../dataquery.gen';
+import { ARGScope } from '../../dataquery';
 import { selectors } from '../../e2e/selectors';
 import createMockDatasource from '../../mocks/datasource';
 import createMockQuery from '../../mocks/query';

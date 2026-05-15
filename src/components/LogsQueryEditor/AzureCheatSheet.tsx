@@ -18,7 +18,7 @@ import {
 } from '@grafana/ui';
 
 import type AzureLogAnalyticsDatasource from '../../azure_log_analytics/azure_log_analytics_datasource';
-import { AzureQueryType } from '../../dataquery.gen';
+import { AzureQueryType } from '../../dataquery';
 import { type AzureMonitorQuery } from '../../types/query';
 import {
   type Category,

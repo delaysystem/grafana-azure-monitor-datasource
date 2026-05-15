@@ -17,7 +17,7 @@ import { DataSourceWithBackend, getTemplateSrv, type TemplateSrv } from '@grafan
 import AzureLogAnalyticsDatasource from './azure_log_analytics/azure_log_analytics_datasource';
 import AzureMonitorDatasource from './azure_monitor/azure_monitor_datasource';
 import AzureResourceGraphDatasource from './azure_resource_graph/azure_resource_graph_datasource';
-import { AzureQueryType } from './dataquery.gen';
+import { AzureQueryType } from './dataquery';
 import ResourcePickerData from './resourcePicker/resourcePickerData';
 import { type AzureMonitorQuery } from './types/query';
 import { type AzureMonitorDataSourceJsonData } from './types/types';

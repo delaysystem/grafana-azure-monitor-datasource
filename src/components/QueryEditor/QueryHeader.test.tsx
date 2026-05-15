@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { CoreApp, LoadingState, type PanelData } from '@grafana/data';
 import { config, reportInteraction } from '@grafana/runtime';
 
-import { AzureQueryType, LogsEditorMode } from '../../dataquery.gen';
+import { AzureQueryType, LogsEditorMode } from '../../dataquery';
 import { selectors } from '../../e2e/selectors';
 import createMockQuery from '../../mocks/query';
 import { type AzureMonitorQuery } from '../../types/query';

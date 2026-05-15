@@ -9,7 +9,7 @@ import { t } from '@grafana/i18n';
 import { AccessoryButton } from '@grafana/plugin-ui';
 import { Select, ButtonSelect, AsyncMultiSelect, getSelectStyles, useTheme2, Checkbox, Stack } from '@grafana/ui';
 
-import { type AzureMonitorQuery, AzureQueryType, type AzureTracesFilter } from '../../dataquery.gen';
+import { type AzureMonitorQuery, AzureQueryType, type AzureTracesFilter } from '../../dataquery';
 import type Datasource from '../../datasource';
 import { type VariableOptionGroup } from '../../types/types';
 import { addValueToOptions } from '../../utils/common';

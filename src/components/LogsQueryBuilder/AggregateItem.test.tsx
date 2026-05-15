@@ -6,7 +6,7 @@ import {
   BuilderQueryEditorPropertyType,
   type BuilderQueryEditorReduceExpression,
   BuilderQueryEditorReduceParameterTypes,
-} from '../../dataquery.gen';
+} from '../../dataquery';
 
 import AggregateItem from './AggregateItem';
 
