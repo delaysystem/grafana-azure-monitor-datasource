@@ -720,7 +720,7 @@ describe('LogsQueryEditor', () => {
           resources: [
             '/subscriptions/def-456/resourceGroups/dev-3/providers/microsoft.operationalinsights/workspaces/la-workspace',
           ],
-          mode: require('../../dataquery.gen').LogsEditorMode.Builder,
+          mode: require('../../dataquery').LogsEditorMode.Builder,
         },
       });
       const onChange = jest.fn();

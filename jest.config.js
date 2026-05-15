@@ -5,6 +5,9 @@ module.exports = {
   moduleNameMapper: {
     ...require('./.config/jest.config').moduleNameMapper,
     '^monaco-editor$': '<rootDir>/src/__mocks__/monaco-editor.ts',
+    '^@openfeature/react-sdk$': '<rootDir>/src/__mocks__/@openfeature/react-sdk.ts',
+    '^@grafana/test-utils$': '<rootDir>/src/__mocks__/@grafana/test-utils.ts',
+    '^@kusto/monaco-kusto$': '<rootDir>/src/__mocks__/@kusto/monaco-kusto.ts',
   },
   transformIgnorePatterns: [
     require('./.config/jest/utils').nodeModulesToTransform([
@@ -12,6 +15,7 @@ module.exports = {
       'monaco-editor',
       '@openfeature/ofrep-web-provider',
       '@openfeature/web-sdk',
+      '@openfeature/react-sdk',
       '@lezer/lr',
       '@lezer/common',
       '@lezer/highlight',
