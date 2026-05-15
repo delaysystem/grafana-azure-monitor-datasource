@@ -51,7 +51,7 @@ type DatasourceInfo struct {
 	JSONData                map[string]any
 	DecryptedSecureJSONData map[string]string
 	DatasourceID            int64
-	OrgID                   int64
+	Namespace               string
 
 	DatasourceName string
 	DatasourceUID  string

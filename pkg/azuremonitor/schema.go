@@ -35,25 +35,16 @@ const (
 
 // metricsSchema implements schemads schema handlers for Azure Monitor metrics.
 type metricsSchema struct {
-	s      *Service
+	s      *DataSource
 	logger log.Logger
 }
 
-func newMetricsSchema(s *Service, logger log.Logger) *metricsSchema {
+func newMetricsSchema(s *DataSource, logger log.Logger) *metricsSchema {
 	return &metricsSchema{s: s, logger: logger}
 }
 
-func (p *metricsSchema) dsInfo(ctx context.Context) (types.DatasourceInfo, error) {
-	pc := backend.PluginConfigFromContext(ctx)
-	i, err := p.s.im.Get(ctx, pc)
-	if err != nil {
-		return types.DatasourceInfo{}, err
-	}
-	dsInfo, ok := i.(types.DatasourceInfo)
-	if !ok {
-		return types.DatasourceInfo{}, fmt.Errorf("invalid datasource instance type")
-	}
-	return dsInfo, nil
+func (p *metricsSchema) dsInfo(_ context.Context) (types.DatasourceInfo, error) {
+	return p.s.info, nil
 }
 
 func metricsTableParameters() []schemas.TableParameter {

@@ -100,9 +100,9 @@ func (s *fakeProxy) Do(rw http.ResponseWriter, req *http.Request, cli *http.Clie
 
 func Test_handleResourceReq(t *testing.T) {
 	proxy := &fakeProxy{}
-	s := Service{
-		im: &fakeInstance{
-			services: map[string]types.DatasourceService{
+	s := DataSource{
+		info: types.DatasourceInfo{
+			Services: map[string]types.DatasourceService{
 				azureMonitor: {
 					URL:        "https://management.azure.com",
 					HTTPClient: &http.Client{},

@@ -30,15 +30,10 @@ import (
 	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/utils"
 )
 
-func NewDatasource(_ context.Context, _ backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
-	return ProvideService(httpclient.NewProvider()), nil
-}
-
-func ProvideService(httpClientProvider *httpclient.Provider) *Service {
+func NewDatasource(ctx context.Context, settings backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
 	logger := backend.NewLoggerWith("logger", "tsdb.azuremonitor")
-	proxy := &httpServiceProxy{
-		logger: logger,
-	}
+	proxy := &httpServiceProxy{logger: logger}
+	clientProvider := httpclient.NewProvider()
 	executors := map[string]azDatasourceExecutor{
 		azureMonitor:       &metrics.AzureMonitorDatasource{Proxy: proxy, Logger: logger},
 		azureLogAnalytics:  &loganalytics.AzureLogAnalyticsDatasource{Proxy: proxy, Logger: logger},
@@ -47,18 +42,26 @@ func ProvideService(httpClientProvider *httpclient.Provider) *Service {
 		traceExemplar:      &loganalytics.AzureLogAnalyticsDatasource{Proxy: proxy, Logger: logger},
 	}
 
-	im := datasource.NewInstanceManager(NewInstanceSettings(httpClientProvider, executors, logger))
+	instance, err := NewInstanceSettings(clientProvider, executors, logger)(ctx, settings)
+	if err != nil {
+		return nil, err
+	}
+	info, ok := instance.(types.DatasourceInfo)
+	if !ok {
+		return nil, fmt.Errorf("unexpected instance type from NewInstanceSettings")
+	}
+	info.DatasourceName = settings.Name
+	info.DatasourceUID = settings.UID
 
-	s := &Service{
-		im:        im,
+	ds := &DataSource{
+		info:      info,
 		executors: executors,
 		logger:    logger,
 	}
-
-	s.queryMux = s.newQueryMux()
-	muxHandler := httpadapter.New(s.newResourceMux())
-	schemaProvider := newMetricsSchema(s, logger)
-	s.resourceHandler = schemas.NewSchemaDatasource(
+	ds.queryMux = ds.newQueryMux()
+	muxHandler := httpadapter.New(ds.newResourceMux())
+	schemaProvider := newMetricsSchema(ds, logger)
+	ds.resourceHandler = schemas.NewSchemaDatasource(
 		schemaProvider,
 		schemaProvider,
 		schemaProvider,
@@ -66,8 +69,7 @@ func ProvideService(httpClientProvider *httpclient.Provider) *Service {
 		schemaProvider,
 		muxHandler,
 	)
-
-	return s
+	return ds, nil
 }
 
 func handleDeprecatedQueryTypes(req *backend.QueryDataRequest) *backend.QueryDataResponse {
@@ -87,7 +89,7 @@ func handleDeprecatedQueryTypes(req *backend.QueryDataRequest) *backend.QueryDat
 	}
 }
 
-func (s *Service) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
+func (ds *DataSource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
 	responses := handleDeprecatedQueryTypes(req)
 
 	if len(responses.Responses) > 0 {
@@ -95,8 +97,8 @@ func (s *Service) QueryData(ctx context.Context, req *backend.QueryDataRequest) 
 	}
 
 	ctxWithUser := azusercontext.WithUserFromQueryReq(ctx, req)
-	req, sqlErrs := s.normalizeGrafanaSQLRequest(ctxWithUser, req)
-	resp, err := s.queryMux.QueryData(ctxWithUser, req)
+	req, sqlErrs := ds.normalizeGrafanaSQLRequest(ctxWithUser, req)
+	resp, err := ds.queryMux.QueryData(ctxWithUser, req)
 	if err != nil {
 		return nil, err
 	}
@@ -114,12 +116,12 @@ func (s *Service) QueryData(ctx context.Context, req *backend.QueryDataRequest) 
 	return resp, nil
 }
 
-func (s *Service) CallResource(ctx context.Context, req *backend.CallResourceRequest, sender backend.CallResourceResponseSender) error {
-	return s.resourceHandler.CallResource(azusercontext.WithUserFromResourceReq(ctx, req), req, sender)
+func (ds *DataSource) CallResource(ctx context.Context, req *backend.CallResourceRequest, sender backend.CallResourceResponseSender) error {
+	return ds.resourceHandler.CallResource(azusercontext.WithUserFromResourceReq(ctx, req), req, sender)
 }
 
-type Service struct {
-	im        instancemgmt.InstanceManager
+type DataSource struct {
+	info      types.DatasourceInfo
 	executors map[string]azDatasourceExecutor
 
 	queryMux        *datasource.QueryTypeMux
@@ -203,33 +205,15 @@ type azDatasourceExecutor interface {
 	ResourceRequest(rw http.ResponseWriter, req *http.Request, cli *http.Client) (http.ResponseWriter, error)
 }
 
-func (s *Service) getDataSourceFromPluginReq(ctx context.Context, req *backend.QueryDataRequest) (types.DatasourceInfo, error) {
-	i, err := s.im.Get(ctx, req.PluginContext)
-	if err != nil {
-		return types.DatasourceInfo{}, err
-	}
-	dsInfo, ok := i.(types.DatasourceInfo)
-	if !ok {
-		return types.DatasourceInfo{}, fmt.Errorf("unable to convert datasource from service instance")
-	}
-	dsInfo.OrgID = req.PluginContext.OrgID // nolint:staticcheck
-
-	dsInfo.DatasourceName = req.PluginContext.DataSourceInstanceSettings.Name
-	dsInfo.DatasourceUID = req.PluginContext.DataSourceInstanceSettings.UID
-	return dsInfo, nil
-}
-
-func (s *Service) newQueryMux() *datasource.QueryTypeMux {
+func (ds *DataSource) newQueryMux() *datasource.QueryTypeMux {
 	mux := datasource.NewQueryTypeMux()
-	for dsType := range s.executors {
+	for dsType := range ds.executors {
 		// Make a copy of the string to keep the reference after the iterator
 		dst := dsType
 		mux.HandleFunc(dsType, func(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
-			executor := s.executors[dst]
-			dsInfo, err := s.getDataSourceFromPluginReq(ctx, req)
-			if err != nil {
-				return nil, err
-			}
+			executor := ds.executors[dst]
+			dsInfo := ds.info
+			dsInfo.Namespace = req.PluginContext.Namespace
 			service, ok := dsInfo.Services[dst]
 			if !ok {
 				return nil, fmt.Errorf("missing service for %s", dst)
@@ -240,20 +224,6 @@ func (s *Service) newQueryMux() *datasource.QueryTypeMux {
 		})
 	}
 	return mux
-}
-
-func (s *Service) getDSInfo(ctx context.Context, pluginCtx backend.PluginContext) (types.DatasourceInfo, error) {
-	i, err := s.im.Get(ctx, pluginCtx)
-	if err != nil {
-		return types.DatasourceInfo{}, err
-	}
-
-	instance, ok := i.(types.DatasourceInfo)
-	if !ok {
-		return types.DatasourceInfo{}, fmt.Errorf("failed to cast datsource info")
-	}
-
-	return instance, nil
 }
 
 func queryMetricHealth(ctx context.Context, dsInfo types.DatasourceInfo) (*http.Response, error) {
@@ -426,19 +396,14 @@ func graphLogHealthCheck(ctx context.Context, dsInfo types.DatasourceInfo, defau
 	return "Successfully connected to Azure Resource Graph endpoint.", backend.HealthStatusOk
 }
 
-func (s *Service) CheckHealth(ctx context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
+func (ds *DataSource) CheckHealth(ctx context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
 	ctx = azusercontext.WithUserFromHealthCheckReq(ctx, req)
-	dsInfo, err := s.getDSInfo(ctx, req.PluginContext)
-	if err != nil {
-		return &backend.CheckHealthResult{
-			Status:  backend.HealthStatusError,
-			Message: err.Error(),
-		}, nil
-	}
+	dsInfo := ds.info
+	dsInfo.Namespace = req.PluginContext.Namespace
 
 	status := backend.HealthStatusOk
 
-	metricsLog, defaultSubscription, metricsStatus := metricCheckHealth(ctx, dsInfo, s.logger)
+	metricsLog, defaultSubscription, metricsStatus := metricCheckHealth(ctx, dsInfo, ds.logger)
 	if metricsStatus != backend.HealthStatusOk {
 		status = metricsStatus
 	}

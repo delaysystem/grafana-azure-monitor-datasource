@@ -11,8 +11,6 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
-
-	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/types"
 )
 
 func getTarget(original string) (target string, err error) {
@@ -108,20 +106,6 @@ func (s *httpServiceProxy) Do(rw http.ResponseWriter, req *http.Request, cli *ht
 	return rw, nil
 }
 
-func (s *Service) getDataSourceFromHTTPReq(req *http.Request) (types.DatasourceInfo, error) {
-	ctx := req.Context()
-	pluginContext := backend.PluginConfigFromContext(ctx)
-	i, err := s.im.Get(ctx, pluginContext)
-	if err != nil {
-		return types.DatasourceInfo{}, err
-	}
-	ds, ok := i.(types.DatasourceInfo)
-	if !ok {
-		return types.DatasourceInfo{}, fmt.Errorf("unable to convert datasource from service instance")
-	}
-	return ds, nil
-}
-
 func writeErrorResponse(rw http.ResponseWriter, code int, msg string) {
 	rw.WriteHeader(code)
 	errorBody := map[string]string{
@@ -134,7 +118,7 @@ func writeErrorResponse(rw http.ResponseWriter, code int, msg string) {
 	}
 }
 
-func (s *Service) handleResourceReq(subDataSource string) func(rw http.ResponseWriter, req *http.Request) {
+func (s *DataSource) handleResourceReq(subDataSource string) func(rw http.ResponseWriter, req *http.Request) {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		s.logger.Debug("Received resource call", "url", req.URL.String(), "method", req.Method)
 
@@ -144,11 +128,7 @@ func (s *Service) handleResourceReq(subDataSource string) func(rw http.ResponseW
 			return
 		}
 
-		dsInfo, err := s.getDataSourceFromHTTPReq(req)
-		if err != nil {
-			writeErrorResponse(rw, http.StatusInternalServerError, fmt.Sprintf("unexpected error %v", err))
-			return
-		}
+		dsInfo := s.info
 
 		service := dsInfo.Services[subDataSource]
 		serviceURL, err := url.Parse(service.URL)
@@ -172,7 +152,7 @@ func (s *Service) handleResourceReq(subDataSource string) func(rw http.ResponseW
 
 // newResourceMux provides route definitions shared with the frontend.
 // Check: /public/app/plugins/datasource/azuremonitor/utils/common.ts <routeNames>
-func (s *Service) newResourceMux() *http.ServeMux {
+func (s *DataSource) newResourceMux() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/azuremonitor/", s.handleResourceReq(azureMonitor))
 	mux.HandleFunc("/loganalytics/", s.handleResourceReq(azureLogAnalytics))

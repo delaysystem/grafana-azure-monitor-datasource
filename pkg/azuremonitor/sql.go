@@ -17,7 +17,7 @@ var azureSubscriptionIDSuffix = regexp.MustCompile(`(?i)[0-9a-f]{8}-[0-9a-f]{4}-
 
 // normalizeGrafanaSQLRequest translates dsabstraction SQL queries into Azure Monitor metrics JSON.
 // sqlErrors maps refId to validation errors for queries that were not converted.
-func (s *Service) normalizeGrafanaSQLRequest(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataRequest, map[string]error) {
+func (s *DataSource) normalizeGrafanaSQLRequest(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataRequest, map[string]error) {
 	if req == nil || len(req.Queries) == 0 {
 		return req, nil
 	}
@@ -99,11 +99,7 @@ func (s *Service) normalizeGrafanaSQLRequest(ctx context.Context, req *backend.Q
 				sqlErrors[q.RefID] = fmt.Errorf("azure monitor sql: region table parameter is required for multi-resource queries (when resourceName is omitted)")
 				continue
 			}
-			dsInfo, err := s.getDataSourceFromPluginReq(ctx, req)
-			if err != nil {
-				sqlErrors[q.RefID] = fmt.Errorf("azure monitor sql: %w", err)
-				continue
-			}
+			dsInfo := s.info
 			discovered, err := discoverResourcesForAzureMonitorSQL(ctx, dsInfo, sub, rg, ns)
 			if err != nil {
 				sqlErrors[q.RefID] = err

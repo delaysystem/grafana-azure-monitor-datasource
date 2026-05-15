@@ -27,7 +27,7 @@ func TestParseSubscriptionIDFromParameter(t *testing.T) {
 }
 
 func TestNormalizeGrafanaSQLRequest_DisabledToggle(t *testing.T) {
-	s := &Service{}
+	s := &DataSource{}
 	req := &backend.QueryDataRequest{
 		PluginContext: backend.PluginContext{
 			GrafanaConfig: config.NewGrafanaCfg(map[string]string{
@@ -45,7 +45,7 @@ func TestNormalizeGrafanaSQLRequest_DisabledToggle(t *testing.T) {
 }
 
 func TestNormalizeGrafanaSQLRequest_ConvertsMetricsQuery(t *testing.T) {
-	s := &Service{}
+	s := &DataSource{}
 	sub := "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
 	tp := map[string]any{
 		subscription:  sub,
@@ -109,7 +109,7 @@ func TestNormalizeGrafanaSQLRequest_ConvertsMetricsQuery(t *testing.T) {
 }
 
 func TestNormalizeGrafanaSQLRequest_MissingAggregation(t *testing.T) {
-	s := &Service{}
+	s := &DataSource{}
 	raw, err := json.Marshal(map[string]any{
 		"refId":      "A",
 		"table":      "microsoft.compute-virtualmachines",
@@ -134,7 +134,7 @@ func TestNormalizeGrafanaSQLRequest_MissingAggregation(t *testing.T) {
 }
 
 func TestNormalizeGrafanaSQLRequest_MissingResourceGroup(t *testing.T) {
-	s := &Service{}
+	s := &DataSource{}
 	raw, err := json.Marshal(map[string]any{
 		"refId":      "A",
 		"table":      "microsoft.compute-virtualmachines",
@@ -160,7 +160,7 @@ func TestNormalizeGrafanaSQLRequest_MissingResourceGroup(t *testing.T) {
 }
 
 func TestNormalizeGrafanaSQLRequest_MultiResourceRequiresRegion(t *testing.T) {
-	s := &Service{}
+	s := &DataSource{}
 	raw, err := json.Marshal(map[string]any{
 		"refId":      "A",
 		"table":      "microsoft.compute-virtualmachines",

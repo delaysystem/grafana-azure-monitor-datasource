@@ -148,7 +148,7 @@ func (e *AzureResourceGraphDatasource) executeQuery(ctx context.Context, query *
 		attribute.Int64("from", query.TimeRange.From.UnixNano()/int64(time.Millisecond)),
 		attribute.Int64("until", query.TimeRange.To.UnixNano()/int64(time.Millisecond)),
 		attribute.Int64("datasource_id", dsInfo.DatasourceID),
-		attribute.Int64("org_id", dsInfo.OrgID),
+		attribute.String("namespace", dsInfo.Namespace),
 	),
 	)
 

@@ -18,7 +18,6 @@ import (
 	"github.com/grafana/grafana-azure-sdk-go/v2/azcredentials"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/config"
 	"github.com/grafana/grafana-plugin-sdk-go/experimental/featuretoggles"
@@ -160,24 +159,6 @@ func TestNewInstanceSettings(t *testing.T) {
 	}
 }
 
-type fakeInstance struct {
-	routes   map[string]types.AzRoute
-	services map[string]types.DatasourceService
-	settings types.AzureMonitorSettings
-}
-
-func (f *fakeInstance) Get(_ context.Context, _ backend.PluginContext) (instancemgmt.Instance, error) {
-	return types.DatasourceInfo{
-		Routes:   f.routes,
-		Services: f.services,
-		Settings: f.settings,
-	}, nil
-}
-
-func (f *fakeInstance) Do(_ context.Context, _ backend.PluginContext, _ instancemgmt.InstanceCallbackFunc) error {
-	return nil
-}
-
 type fakeExecutor struct {
 	t           *testing.T
 	queryType   string
@@ -228,10 +209,10 @@ func Test_newMux(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &Service{
-				im: &fakeInstance{
-					routes: testRoutes,
-					services: map[string]types.DatasourceService{
+			s := &DataSource{
+				info: types.DatasourceInfo{
+					Routes: testRoutes,
+					Services: map[string]types.DatasourceService{
 						tt.queryType: {
 							URL:        testRoutes[tt.queryType].URL,
 							HTTPClient: &http.Client{},
@@ -506,19 +487,16 @@ func TestCheckHealth(t *testing.T) {
 		},
 	}
 
-	instance := &fakeInstance{
-		routes:   testRoutes,
-		services: map[string]types.DatasourceService{},
-		settings: types.AzureMonitorSettings{
-			LogAnalyticsDefaultWorkspace: "workspace-id",
-		},
-	}
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			instance.services = tt.customServices
-			s := &Service{
-				im: instance,
+			s := &DataSource{
+				info: types.DatasourceInfo{
+					Routes:   testRoutes,
+					Services: tt.customServices,
+					Settings: types.AzureMonitorSettings{
+						LogAnalyticsDefaultWorkspace: "workspace-id",
+					},
+				},
 			}
 			res, err := s.CheckHealth(context.Background(), &backend.CheckHealthRequest{
 				PluginContext: backend.PluginContext{
@@ -593,10 +571,10 @@ func Test_QueryData(t *testing.T) {
 		},
 	}
 
-	service := &Service{
-		im: &fakeInstance{
-			routes: testRoutes,
-			services: map[string]types.DatasourceService{
+	service := &DataSource{
+		info: types.DatasourceInfo{
+			Routes: testRoutes,
+			Services: map[string]types.DatasourceService{
 				azureMonitor: {
 					URL:        testRoutes[azureMonitor].URL,
 					HTTPClient: &http.Client{},

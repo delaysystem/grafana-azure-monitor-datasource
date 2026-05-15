@@ -264,7 +264,7 @@ func getParams(azJSONModel *dataquery.AzureMetricQuery, query backend.DataQuery)
 	return params, nil
 }
 
-func (e *AzureMonitorDatasource) retrieveSubscriptionDetails(cli *http.Client, ctx context.Context, subscriptionId string, baseUrl string, dsId int64, orgId int64) (string, error) {
+func (e *AzureMonitorDatasource) retrieveSubscriptionDetails(cli *http.Client, ctx context.Context, subscriptionId string, baseUrl string, dsId int64, namespace string) (string, error) {
 	req, err := e.createRequest(ctx, fmt.Sprintf("%s/subscriptions/%s", baseUrl, subscriptionId))
 	if err != nil {
 		return "", fmt.Errorf("failed to retrieve subscription details for subscription %s: %s", subscriptionId, err)
@@ -276,7 +276,7 @@ func (e *AzureMonitorDatasource) retrieveSubscriptionDetails(cli *http.Client, c
 	_, span := tracing.DefaultTracer().Start(ctx, "azuremonitor subscription query", trace.WithAttributes(
 		attribute.String("subscription", subscriptionId),
 		attribute.Int64("datasource_id", dsId),
-		attribute.Int64("org_id", orgId),
+		attribute.String("namespace", namespace),
 	),
 	)
 	defer span.End()
@@ -332,7 +332,7 @@ func (e *AzureMonitorDatasource) executeQuery(ctx context.Context, query *types.
 		attribute.Int64("from", query.TimeRange.From.UnixNano()/int64(time.Millisecond)),
 		attribute.Int64("until", query.TimeRange.To.UnixNano()/int64(time.Millisecond)),
 		attribute.Int64("datasource_id", dsInfo.DatasourceID),
-		attribute.Int64("org_id", dsInfo.OrgID),
+		attribute.String("namespace", dsInfo.Namespace),
 	),
 	)
 	defer span.End()
@@ -353,7 +353,7 @@ func (e *AzureMonitorDatasource) executeQuery(ctx context.Context, query *types.
 		return nil, err
 	}
 
-	subscription, err := e.retrieveSubscriptionDetails(cli, ctx, query.Subscription, dsInfo.Routes["Azure Monitor"].URL, dsInfo.DatasourceID, dsInfo.OrgID)
+	subscription, err := e.retrieveSubscriptionDetails(cli, ctx, query.Subscription, dsInfo.Routes["Azure Monitor"].URL, dsInfo.DatasourceID, dsInfo.Namespace)
 	if err != nil {
 		return nil, err
 	}
