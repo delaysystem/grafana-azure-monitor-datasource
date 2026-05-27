@@ -1,5 +1,5 @@
 import { intersection } from 'lodash';
-import { useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 import { type SelectableValue } from '@grafana/data';
 import { t } from '@grafana/i18n';
@@ -59,7 +59,7 @@ const ArgQueryEditor = ({
   setError,
 }: ArgQueryEditorProps) => {
   const [subscriptions, setSubscriptions] = useState<AzureMonitorOption[]>([]);
-  useMemo(() => {
+  useEffect(() => {
     if (query.azureResourceGraph?.scope !== ARGScope.Directory) {
       datasource
         .getSubscriptions()

@@ -112,7 +112,7 @@ const TracesQueryEditor = ({
               renderAdvanced={(resources, onChange) => (
                 // It's required to cast resources because the resource picker
                 // specifies the type to string | AzureMonitorResource.
-                // eslint-disable-next-line
+                 
                 <AdvancedResourcePicker resources={resources as string[]} onChange={onChange} />
               )}
               selectionNotice={() => 'You may only choose items of the same resource type.'}

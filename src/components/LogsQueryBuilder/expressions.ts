@@ -37,13 +37,6 @@ export interface QueryEditorArrayExpression extends QueryEditorExpression {
   expressions: QueryEditorExpression[] | QueryEditorArrayExpression[];
 }
 
-export interface QueryEditorReduceExpression extends QueryEditorExpression {
-  property: QueryEditorProperty;
-  reduce: QueryEditorProperty;
-  parameters?: QueryEditorFunctionParameterExpression[];
-  focus?: boolean;
-}
-
 export interface QueryEditorPropertyExpression extends QueryEditorExpression {
   property: QueryEditorProperty;
 }

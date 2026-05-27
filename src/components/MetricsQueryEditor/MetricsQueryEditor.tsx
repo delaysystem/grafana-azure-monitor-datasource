@@ -103,7 +103,7 @@ const MetricsQueryEditor = ({
               renderAdvanced={(resources, onChange) => (
                 // It's required to cast resources because the resource picker
                 // specifies the type to string | AzureMonitorResource.
-                // eslint-disable-next-line
+                 
                 <AdvancedResourcePicker resources={resources as AzureMonitorResource[]} onChange={onChange} />
               )}
               selectionNotice={selectionNotice}

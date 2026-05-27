@@ -2,7 +2,7 @@ import { render, screen, waitFor, cleanup } from '@testing-library/react';
 
 import { CoreApp } from '@grafana/data';
 import { config } from '@grafana/runtime';
-// eslint-disable-next-line no-restricted-imports
+ 
 import type * as ui from '@grafana/ui';
 
 import { AzureQueryType, ResultFormat } from '../../dataquery';

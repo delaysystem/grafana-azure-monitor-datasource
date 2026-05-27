@@ -80,11 +80,11 @@ const NestedRow = ({
 
         <td
           className={styles.cell}
-          // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+           
           title={parsedURI.resourceGroup && row.type === ResourceRowType.Resource ? parsedURI.resourceGroup : '-'}
         >
           {
-            // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+             
             parsedURI.resourceGroup && row.type === ResourceRowType.Resource ? parsedURI.resourceGroup : '-'
           }
         </td>
