@@ -78,7 +78,7 @@ export const AppRegistrationCredentials = (props: AppRegistrationCredentialsProp
         <Input
           aria-label={t('components.app-registration-credentials.aria-label-tenant-id', 'Tenant ID')}
           className="width-30"
-          // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+           
           placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
           value={credentials.tenantId || ''}
           onChange={onTenantIdChange}
@@ -97,7 +97,7 @@ export const AppRegistrationCredentials = (props: AppRegistrationCredentialsProp
         <Input
           className="width-30"
           aria-label={t('components.app-registration-credentials.aria-label-client-id', 'Client ID')}
-          // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+           
           placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
           value={credentials.clientId || ''}
           onChange={onClientIdChange}
@@ -190,7 +190,7 @@ const AppRegistrationClientSecretCredentials = ({
             <Input
               className="width-30"
               aria-label={t('components.app-registration-credentials.aria-label-client-secret', 'Client Secret')}
-              // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+               
               placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
               value={credentials.clientSecret || ''}
               onChange={onClientSecretChange}
@@ -302,7 +302,7 @@ const AppRegistrationClientCertificateCredentials = ({
           noMargin
         >
           <SecretTextArea
-            // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+             
             placeholder="-----BEGIN CERTIFICATE-----"
             cols={45}
             rows={7}
@@ -330,7 +330,7 @@ const AppRegistrationClientCertificateCredentials = ({
           noMargin
         >
           <SecretTextArea
-            // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+             
             placeholder="-----BEGIN PRIVATE KEY-----"
             cols={45}
             rows={7}
@@ -351,7 +351,7 @@ const AppRegistrationClientCertificateCredentials = ({
           noMargin
         >
           <SecretTextArea
-            // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+             
             placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
             cols={45}
             rows={1}

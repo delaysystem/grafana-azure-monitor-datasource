@@ -73,7 +73,7 @@ const AdvancedResourcePicker = ({ resources, onChange }: ResourcePickerProps<str
               id={`input-advanced-resource-picker-${index + 1}`}
               value={resource}
               onChange={(event) => onResourceChange(index, event.currentTarget.value)}
-              // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+               
               placeholder="ex: /subscriptions/$subId"
               data-testid={`input-advanced-resource-picker-${index + 1}`}
             />

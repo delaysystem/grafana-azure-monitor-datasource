@@ -36,7 +36,7 @@ export interface AzureMonitorQuery extends common.DataQuery {
    * @deprecated Legacy template variable support.
    */
   grafanaTemplateVariableFn?: GrafanaTemplateVariableQuery;
-  keepCookies?: Array<string>;
+  keepCookies?: string[];
   /**
    * Namespace used in template variable queries
    */
@@ -65,7 +65,7 @@ export interface AzureMonitorQuery extends common.DataQuery {
   /**
    * Subscriptions to be queried via Azure Resource Graph.
    */
-  subscriptions?: Array<string>;
+  subscriptions?: string[];
   /**
    * Used to configure the HTTP request timeout
    */
@@ -110,7 +110,7 @@ export interface AzureMetricQuery {
   /**
    * Time grains that are supported by the metric.
    */
-  allowedTimeGrainsMs?: Array<number>;
+  allowedTimeGrainsMs?: number[];
   /**
    * Used as the value for the metricNamespace property when it's different from the resource namespace.
    */
@@ -126,7 +126,7 @@ export interface AzureMetricQuery {
   /**
    * Filters to reduce the set of data returned. Dimensions that can be filtered on are defined by the metric.
    */
-  dimensionFilters?: Array<AzureMetricDimension>;
+  dimensionFilters?: AzureMetricDimension[];
   /**
    * @deprecated Use metricNamespace instead
    */
@@ -160,7 +160,7 @@ export interface AzureMetricQuery {
   /**
    * Array of resource URIs to be queried.
    */
-  resources?: Array<AzureMonitorResource>;
+  resources?: AzureMonitorResource[];
   /**
    * The granularity of data points to be queried. Defaults to auto.
    */
@@ -216,7 +216,7 @@ export interface AzureLogsQuery {
   /**
    * Array of resource URIs to be queried.
    */
-  resources?: Array<string>;
+  resources?: string[];
   /**
    * Specifies the format results should be returned as.
    */
@@ -242,7 +242,7 @@ export interface AzureTracesQuery {
   /**
    * Filters for property values.
    */
-  filters?: Array<AzureTracesFilter>;
+  filters?: AzureTracesFilter[];
   /**
    * Operation ID. Used only for Traces queries.
    */
@@ -254,7 +254,7 @@ export interface AzureTracesQuery {
   /**
    * Array of resource URIs to be queried.
    */
-  resources?: Array<string>;
+  resources?: string[];
   /**
    * Specifies the format results should be returned as.
    */
@@ -262,7 +262,7 @@ export interface AzureTracesQuery {
   /**
    * Types of events to filter by.
    */
-  traceTypes?: Array<string>;
+  traceTypes?: string[];
 }
 
 export const defaultAzureTracesQuery: Partial<AzureTracesQuery> = {
@@ -275,7 +275,7 @@ export interface AzureTracesFilter {
   /**
    * Values to filter by.
    */
-  filters: Array<string>;
+  filters: string[];
   /**
    * Comparison operator to use. Either equals or not equals.
    */
@@ -348,7 +348,7 @@ export interface BuilderQueryEditorPropertyExpression {
 }
 
 export interface BuilderQueryEditorColumnsExpression {
-  columns?: Array<string>;
+  columns?: string[];
   type: BuilderQueryEditorExpressionType;
 }
 
@@ -376,7 +376,7 @@ export interface BuilderQueryEditorWhereExpressionItems {
 }
 
 export interface BuilderQueryEditorWhereExpression {
-  expressions: Array<BuilderQueryEditorWhereExpressionItems>;
+  expressions: BuilderQueryEditorWhereExpressionItems[];
   type: BuilderQueryEditorExpressionType;
 }
 
@@ -385,7 +385,7 @@ export const defaultBuilderQueryEditorWhereExpression: Partial<BuilderQueryEdito
 };
 
 export interface BuilderQueryEditorWhereExpressionArray {
-  expressions: Array<BuilderQueryEditorWhereExpression>;
+  expressions: BuilderQueryEditorWhereExpression[];
   type: BuilderQueryEditorExpressionType;
 }
 
@@ -401,7 +401,7 @@ export interface BuilderQueryEditorFunctionParameterExpression {
 
 export interface BuilderQueryEditorReduceExpression {
   focus?: boolean;
-  parameters?: Array<BuilderQueryEditorFunctionParameterExpression>;
+  parameters?: BuilderQueryEditorFunctionParameterExpression[];
   property?: BuilderQueryEditorProperty;
   reduce?: BuilderQueryEditorProperty;
 }
@@ -411,7 +411,7 @@ export const defaultBuilderQueryEditorReduceExpression: Partial<BuilderQueryEdit
 };
 
 export interface BuilderQueryEditorReduceExpressionArray {
-  expressions: Array<BuilderQueryEditorReduceExpression>;
+  expressions: BuilderQueryEditorReduceExpression[];
   type: BuilderQueryEditorExpressionType;
 }
 
@@ -427,7 +427,7 @@ export interface BuilderQueryEditorGroupByExpression {
 }
 
 export interface BuilderQueryEditorGroupByExpressionArray {
-  expressions: Array<BuilderQueryEditorGroupByExpression>;
+  expressions: BuilderQueryEditorGroupByExpression[];
   type: BuilderQueryEditorExpressionType;
 }
 
@@ -442,7 +442,7 @@ export interface BuilderQueryEditorOrderByExpression {
 }
 
 export interface BuilderQueryEditorOrderByExpressionArray {
-  expressions: Array<BuilderQueryEditorOrderByExpression>;
+  expressions: BuilderQueryEditorOrderByExpression[];
   type: BuilderQueryEditorExpressionType;
 }
 
@@ -502,7 +502,7 @@ export interface AzureMetricDimension {
   /**
    * Values to match with the filter.
    */
-  filters?: Array<string>;
+  filters?: string[];
   /**
    * String denoting the filter operation. Supports 'eq' - equals,'ne' - not equals, 'sw' - starts with. Note that some dimensions may not support all operators.
    */

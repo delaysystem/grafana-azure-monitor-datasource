@@ -31,23 +31,7 @@ export const DefaultSubscription = (props: Props) => {
   const hasRequiredFields = isCredentialsComplete(credentials);
   const [loadSubscriptionsClicked, onLoadSubscriptions] = useReducer((val) => val + 1, 0);
 
-  useEffect(() => {
-    if (!getSubscriptions || !hasRequiredFields) {
-      updateSubscriptions([]);
-      return;
-    }
-    let canceled = false;
-    getSubscriptions().then((result) => {
-      if (!canceled) {
-        updateSubscriptions(result, Boolean(loadSubscriptionsClicked));
-      }
-    });
-    return () => {
-      canceled = true;
-    };
-    // This effect is intended to be called only once initially and on Load Subscriptions click
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadSubscriptionsClicked]);
+  const onChange = (selected: SelectableValue<string> | undefined) => onSubscriptionChange(selected?.value);
 
   const updateSubscriptions = (received: Array<SelectableValue<string>>, autoSelect = false) => {
     onSubscriptionsChange(received);
@@ -65,7 +49,23 @@ export const DefaultSubscription = (props: Props) => {
     }
   };
 
-  const onChange = (selected: SelectableValue<string> | undefined) => onSubscriptionChange(selected?.value);
+  useEffect(() => {
+    if (!getSubscriptions || !hasRequiredFields) {
+      updateSubscriptions([]);
+      return;
+    }
+    let canceled = false;
+    getSubscriptions().then((result) => {
+      if (!canceled) {
+        updateSubscriptions(result, Boolean(loadSubscriptionsClicked));
+      }
+    });
+    return () => {
+      canceled = true;
+    };
+    // This effect is intended to be called only once initially and on Load Subscriptions click
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadSubscriptionsClicked]);
 
   return (
     <>

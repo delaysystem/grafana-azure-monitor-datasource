@@ -72,7 +72,7 @@ const AdvancedResourcePicker = ({ resources, onChange }: ResourcePickerProps<Azu
           id={`input-advanced-resource-picker-subscription`}
           value={resources[0]?.subscription ?? ''}
           onChange={(event) => onCommonPropChange({ subscription: event.currentTarget.value })}
-          // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+           
           placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXX"
         />
       </InlineField>
@@ -90,7 +90,7 @@ const AdvancedResourcePicker = ({ resources, onChange }: ResourcePickerProps<Azu
           id={`input-advanced-resource-picker-metricNamespace`}
           value={resources[0]?.metricNamespace ?? ''}
           onChange={(event) => onCommonPropChange({ metricNamespace: event.currentTarget.value })}
-          // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+           
           placeholder="Microsoft.Insights/metricNamespaces"
         />
       </InlineField>
@@ -110,7 +110,7 @@ const AdvancedResourcePicker = ({ resources, onChange }: ResourcePickerProps<Azu
           id={`input-advanced-resource-picker-region`}
           value={resources[0]?.region ?? ''}
           onChange={(event) => onCommonPropChange({ region: event.currentTarget.value })}
-          // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+           
           placeholder="northeurope"
         />
       </InlineField>
@@ -141,7 +141,7 @@ const AdvancedResourcePicker = ({ resources, onChange }: ResourcePickerProps<Azu
                   onChange={(event) =>
                     onResourceChange(index, { ...resource, resourceGroup: event.currentTarget.value })
                   }
-                  // eslint-disable-next-line @grafana/i18n/no-untranslated-strings
+                   
                   placeholder="resource-group"
                 />
                 <AccessoryButton
