@@ -7,7 +7,7 @@ require (
 	github.com/google/go-cmp v0.7.0
 	github.com/grafana/grafana-azure-sdk-go/v2 v2.4.1
 	github.com/grafana/grafana-plugin-sdk-go v0.292.1
-	github.com/grafana/schemads v0.2.1
+	github.com/grafana/schemads v0.2.2
 	github.com/stretchr/testify v1.11.1
 	go.opentelemetry.io/otel v1.44.0
 	go.opentelemetry.io/otel/trace v1.44.0
