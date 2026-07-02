@@ -4,6 +4,7 @@ import { omit } from 'lodash';
 
 import { selectors as e2eSelectors } from '@grafana/e2e-selectors';
 import { config } from '@grafana/runtime';
+import { mockComboboxRect } from '@grafana/test-utils';
 
 import type Datasource from '../../datasource';
 import { selectors } from '../../e2e/selectors';
@@ -407,6 +408,10 @@ describe('AzureMonitor ResourcePicker', () => {
   });
 
   describe('filters', () => {
+    beforeAll(() => {
+      // Combobox uses a virtualized list; mock its dimensions so options render in jsdom.
+      mockComboboxRect();
+    });
     beforeEach(() => {
       config.featureToggles.azureResourcePickerUpdates = true;
     });
@@ -489,7 +494,7 @@ describe('AzureMonitor ResourcePicker', () => {
         selectors.components.queryEditor.resourcePicker.filters.subscription.input
       );
       await user.click(subscriptionFilter);
-      await user.type(subscriptionFilter, 'Primary Subscription{ArrowDown}{Enter}');
+      await user.click(await screen.findByRole('option', { name: 'Primary Subscription' }));
 
       await waitFor(() => {
         expect(mockFetchInitialRows).toHaveBeenCalledWith(
@@ -514,7 +519,7 @@ describe('AzureMonitor ResourcePicker', () => {
         selectors.components.queryEditor.resourcePicker.filters.location.input
       );
       await user.click(locationFilter);
-      await user.type(locationFilter, 'North Europe{ArrowDown}{Enter}');
+      await user.click(await screen.findByRole('option', { name: 'North Europe' }));
 
       await waitFor(() => {
         expect(mockFetchInitialRows).toHaveBeenCalledWith(
@@ -533,12 +538,14 @@ describe('AzureMonitor ResourcePicker', () => {
       const user = userEvent.setup();
       const mockFetchInitialRows = jest.spyOn(resourcePickerData, 'fetchInitialRows');
 
+      (defaultProps.datasource.getMetricNamespaces as jest.Mock).mockResolvedValueOnce([
+        { text: 'Kubernetes services', value: 'microsoft.containerservice/managedclusters' },
+      ]);
       render(<ResourcePicker {...defaultProps} queryType="metrics" />);
 
       const typeFilter = await screen.findByTestId(selectors.components.queryEditor.resourcePicker.filters.type.input);
       await user.click(typeFilter);
-
-      await user.type(typeFilter, 'Kubernetes services {ArrowDown}{Enter}');
+      await user.click(await screen.findByRole('option', { name: 'Kubernetes services' }));
       await waitFor(() => {
         expect(mockFetchInitialRows).toHaveBeenCalledWith(
           'metrics',
