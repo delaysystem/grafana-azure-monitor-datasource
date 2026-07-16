@@ -200,7 +200,7 @@ func (s *DataSource) listArmResource(rw http.ResponseWriter, req *http.Request, 
 	}
 
 	query := req.URL.Query()
-	listAll := query.Get("listAll") != "false"
+	listAll := query.Get("listAll") == "true"
 
 	requestURL := service.URL + armPath
 	if token := query.Get("nextToken"); token != "" {
