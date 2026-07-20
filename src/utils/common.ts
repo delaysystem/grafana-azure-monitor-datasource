@@ -4,6 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { AppEvents, type ScopedVars, type SelectableValue, type VariableWithMultiSupport } from '@grafana/data';
 import { t } from '@grafana/i18n';
 import {
+  config,
   getAppEvents,
   getBackendSrv,
   logWarning,
@@ -53,17 +54,29 @@ export const routeNames = {
   resourceGraph: 'resourcegraph',
 };
 
+// ARM listings now flow through the datasource resource passthrough (azuremonitor/ prefix +
+// native api-version). The dedicated /resources/subscriptions and /resources/workspaces routes
+// were removed from the backend.
 export const paginatedRoutes = {
-  subscriptions: 'subscriptions',
-  workspaces: 'workspaces',
+  subscriptions: `${routeNames.azureMonitor}/subscriptions?api-version=2019-03-01`,
+  workspaces: (subscriptionId: string) =>
+    `${routeNames.azureMonitor}/subscriptions/${subscriptionId}/providers/Microsoft.OperationalInsights/workspaces?api-version=2017-04-26-preview`,
 } as const;
 
 export interface ArmResourcePage<T> {
   value: T[];
   nextToken?: string;
+  nextLink?: string;
   truncated: boolean;
 }
 
+// Server-side ARM pagination on the passthrough is gated by this feature flag. The installed
+// @grafana/data does not type the flag yet, so read it through a cast (no ts-ignore).
+export function isServerSidePaginationEnabled(): boolean {
+  return (config.featureToggles as Record<string, boolean | undefined>).azureMonitorServerSidePagination === true;
+}
+
+// Flag ON: the backend advertises the continuation cursor via a `Link: <?nextToken=..>; rel="next"` header.
 export function parseNextLinkToken(linkHeader: string): string | undefined {
   const match = /<\?([^>]*)>;\s*rel="next"/.exec(linkHeader);
   if (!match) {
@@ -72,14 +85,30 @@ export function parseNextLinkToken(linkHeader: string): string | undefined {
   return new URLSearchParams(match[1]).get('nextToken') ?? undefined;
 }
 
+// Flag OFF: the raw ARM body carries an absolute `nextLink`; the $skiptoken is the continuation cursor.
+export function skipTokenFromNextLink(nextLink?: string): string | undefined {
+  if (!nextLink) {
+    return undefined;
+  }
+  const queryIndex = nextLink.indexOf('?');
+  const query = queryIndex >= 0 ? nextLink.slice(queryIndex + 1) : nextLink;
+  return new URLSearchParams(query).get('$skiptoken') ?? undefined;
+}
+
+// Flag OFF: rewrite an absolute ARM nextLink to a passthrough-relative path before re-fetching.
+export function nextLinkToPassthroughPath(nextLink: string): string {
+  const url = new URL(nextLink);
+  return `${routeNames.azureMonitor}${url.pathname}${url.search}`;
+}
+
 export async function fetchArmResourcePage<T>(
   datasourceUid: string,
-  subtype: string,
+  path: string,
   params: Record<string, string> = {}
 ): Promise<ArmResourcePage<T>> {
   const response = await lastValueFrom(
     getBackendSrv().fetch<AzureAPIResponse<T>>({
-      url: `/api/datasources/uid/${datasourceUid}/resources/${subtype}`,
+      url: `/api/datasources/uid/${datasourceUid}/resources/${path}`,
       params,
       method: 'GET',
     })
@@ -87,20 +116,60 @@ export async function fetchArmResourcePage<T>(
   const value = response.data?.value ?? [];
   const linkHeader = response.headers.get('Link');
   const nextToken = linkHeader ? parseNextLinkToken(linkHeader) : undefined;
+  const nextLink = response.data?.nextLink;
   const truncated = response.headers.get('X-Results-Truncated') === 'true';
-  return { value, nextToken, truncated };
+  return { value, nextToken, nextLink, truncated };
 }
 
+// Full listing. Flag ON: ask the backend to page server-side (listAll=true) in one request and
+// surface truncation. Flag OFF: follow the raw ARM nextLink chain from the client.
 export async function fetchAllArmResources<T>(
   datasourceUid: string,
-  subtype: string,
+  path: string,
   params: Record<string, string> = {}
 ): Promise<T[]> {
-  const { value, truncated } = await fetchArmResourcePage<T>(datasourceUid, subtype, { ...params, listAll: 'true' });
-  if (truncated) {
-    warnResultsTruncated();
+  if (isServerSidePaginationEnabled()) {
+    const { value, truncated } = await fetchArmResourcePage<T>(datasourceUid, path, { ...params, listAll: 'true' });
+    if (truncated) {
+      warnResultsTruncated();
+    }
+    return value;
   }
-  return value;
+
+  const results: T[] = [];
+  let nextPath: string | undefined = path;
+  let nextParams: Record<string, string> | undefined = params;
+  while (nextPath) {
+    const { value, nextLink } = await fetchArmResourcePage<T>(datasourceUid, nextPath, nextParams);
+    results.push(...value);
+    nextPath = nextLink ? nextLinkToPassthroughPath(nextLink) : undefined;
+    // The rewritten nextLink already carries api-version + $skiptoken; do not resend the initial params.
+    nextParams = undefined;
+  }
+  return results;
+}
+
+// Incremental (one page at a time). Flag ON: listAll=false + the Link-header nextToken.
+// Flag OFF: append the body nextLink's $skiptoken to the passthrough path (no listAll/nextToken params).
+export async function fetchArmResourceIncrementalPage<T>(
+  datasourceUid: string,
+  basePath: string,
+  nextToken?: string
+): Promise<{ value: T[]; nextToken?: string }> {
+  if (isServerSidePaginationEnabled()) {
+    const params: Record<string, string> = { listAll: 'false' };
+    if (nextToken) {
+      params.nextToken = nextToken;
+    }
+    const { value, nextToken: next } = await fetchArmResourcePage<T>(datasourceUid, basePath, params);
+    return { value, nextToken: next };
+  }
+
+  const path = nextToken
+    ? `${basePath}${basePath.includes('?') ? '&' : '?'}$skiptoken=${encodeURIComponent(nextToken)}`
+    : basePath;
+  const { value, nextLink } = await fetchArmResourcePage<T>(datasourceUid, path);
+  return { value, nextToken: skipTokenFromNextLink(nextLink) };
 }
 
 export function warnResultsTruncated(): void {

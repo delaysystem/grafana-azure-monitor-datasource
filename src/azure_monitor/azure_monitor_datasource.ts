@@ -29,7 +29,7 @@ import {
 } from '../types/types';
 import {
   fetchAllArmResources,
-  fetchArmResourcePage,
+  fetchArmResourceIncrementalPage,
   paginatedRoutes,
   replaceTemplateVariables,
   routeNames,
@@ -184,14 +184,10 @@ export default class AzureMonitorDatasource extends DataSourceWithBackend<
   async getSubscriptionsPage(
     nextToken?: string
   ): Promise<{ subscriptions: Array<{ text: string; value: string }>; nextToken?: string }> {
-    const params: Record<string, string> = { listAll: 'false' };
-    if (nextToken) {
-      params.nextToken = nextToken;
-    }
-    const { value, nextToken: next } = await fetchArmResourcePage<Subscription>(
+    const { value, nextToken: next } = await fetchArmResourceIncrementalPage<Subscription>(
       this.uid,
       paginatedRoutes.subscriptions,
-      params
+      nextToken
     );
     return { subscriptions: ResponseParser.parseSubscriptions({ value }), nextToken: next };
   }

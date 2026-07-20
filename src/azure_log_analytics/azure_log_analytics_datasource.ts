@@ -18,7 +18,7 @@ import {
 } from '../types/types';
 import {
   fetchAllArmResources,
-  fetchArmResourcePage,
+  fetchArmResourceIncrementalPage,
   interpolateVariable,
   paginatedRoutes,
   routeNames,
@@ -80,7 +80,7 @@ export default class AzureLogAnalyticsDatasource extends DataSourceWithBackend<
   async getWorkspaces(subscription: string): Promise<AzureLogsVariable[]> {
     const subscriptionId = this.templateSrv.replace(subscription || this.defaultSubscriptionId);
 
-    const value = await fetchAllArmResources<Workspace>(this.uid, paginatedRoutes.workspaces, { subscriptionId });
+    const value = await fetchAllArmResources<Workspace>(this.uid, paginatedRoutes.workspaces(subscriptionId));
     return workspacesToVariables(value);
   }
 
@@ -90,14 +90,10 @@ export default class AzureLogAnalyticsDatasource extends DataSourceWithBackend<
   ): Promise<{ workspaces: AzureLogsVariable[]; nextToken?: string }> {
     const subscriptionId = this.templateSrv.replace(subscription || this.defaultSubscriptionId);
 
-    const params: Record<string, string> = { subscriptionId, listAll: 'false' };
-    if (nextToken) {
-      params.nextToken = nextToken;
-    }
-    const { value, nextToken: next } = await fetchArmResourcePage<Workspace>(
+    const { value, nextToken: next } = await fetchArmResourceIncrementalPage<Workspace>(
       this.uid,
-      paginatedRoutes.workspaces,
-      params
+      paginatedRoutes.workspaces(subscriptionId),
+      nextToken
     );
     return { workspaces: workspacesToVariables(value), nextToken: next };
   }

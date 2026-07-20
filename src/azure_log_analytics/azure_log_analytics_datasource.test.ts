@@ -1,6 +1,7 @@
 import { of } from 'rxjs';
 
 import { AppEvents, type CustomVariableModel } from '@grafana/data';
+import { config } from '@grafana/runtime';
 
 import { type AzureLogsQuery, AzureQueryType, type AzureTracesQuery } from '../dataquery';
 import { type Context, createContext } from '../mocks/datasource';
@@ -32,10 +33,21 @@ jest.mock('@grafana/runtime', () => {
   };
 });
 
+const featureToggles = config.featureToggles as Record<string, boolean | undefined>;
+
+// Flag ON: backend returns a normalized { value } body plus Link / X-Results-Truncated headers.
 function mockArmPage<T>(value: T[], headers: Record<string, string> = {}) {
   return of({
     data: { value },
-    headers: { get: (key: string) => headers[key] ?? null },
+    headers: new Headers(headers),
+  });
+}
+
+// Flag OFF: passthrough returns the raw ARM body ({ value, nextLink }) with no Link header.
+function mockRawArmPage<T>(value: T[], nextLink?: string) {
+  return of({
+    data: { value, nextLink },
+    headers: new Headers({}),
   });
 }
 
@@ -131,10 +143,24 @@ describe('AzureLogAnalyticsDatasource', () => {
   });
 
   describe('When performing getWorkspaces', () => {
+    const workspacesUrl =
+      '/api/datasources/uid/la-uid/resources/azuremonitor/subscriptions/sub/providers/Microsoft.OperationalInsights/workspaces?api-version=2017-04-26-preview';
+
     beforeEach(() => {
-      backendFetch.mockClear();
+      backendFetch.mockReset();
       publishAppEvent.mockClear();
-      backendFetch.mockReturnValue(mockArmPage([{ name: 'foobar', id: 'foo', properties: { customerId: 'bar' } }]));
+      // Return the interpolated value as-is so the subscriptionId lands in the passthrough path,
+      // then rebuild the datasource so it captures this templateSrv.replace.
+      replace = ((target?: string) => target ?? '') as typeof replace;
+      ctx = createContext({
+        instanceSettings: { uid: 'la-uid', jsonData: { subscriptionId: 'xxx' }, url: 'http://azureloganalyticsapi' },
+      });
+      backendFetch.mockReturnValue(mockRawArmPage([{ name: 'foobar', id: 'foo', properties: { customerId: 'bar' } }]));
+    });
+
+    afterEach(() => {
+      delete featureToggles['azureMonitorServerSidePagination'];
+      replace = () => '';
     });
 
     it('should return the workspace id', async () => {
@@ -142,40 +168,111 @@ describe('AzureLogAnalyticsDatasource', () => {
       expect(workspaces).toEqual([{ text: 'foobar', value: 'foo' }]);
     });
 
-    it('requests the backend workspaces endpoint once in eager mode', async () => {
-      backendFetch.mockReturnValue(
-        mockArmPage([
-          { name: 'ws-1', id: 'id-1', properties: { customerId: 'c1' } },
-          { name: 'ws-2', id: 'id-2', properties: { customerId: 'c2' } },
-        ])
-      );
+    describe('with server-side pagination enabled (flag ON)', () => {
+      beforeEach(() => {
+        featureToggles['azureMonitorServerSidePagination'] = true;
+      });
 
-      const workspaces = await ctx.datasource.azureLogAnalyticsDatasource.getWorkspaces('sub');
+      it('requests the passthrough workspaces endpoint once with listAll=true', async () => {
+        backendFetch.mockReturnValue(
+          mockArmPage([
+            { name: 'ws-1', id: 'id-1', properties: { customerId: 'c1' } },
+            { name: 'ws-2', id: 'id-2', properties: { customerId: 'c2' } },
+          ])
+        );
 
-      expect(backendFetch).toHaveBeenCalledTimes(1);
-      expect(backendFetch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          url: '/api/datasources/uid/la-uid/resources/workspaces',
+        const workspaces = await ctx.datasource.azureLogAnalyticsDatasource.getWorkspaces('sub');
+
+        expect(backendFetch).toHaveBeenCalledTimes(1);
+        expect(backendFetch).toHaveBeenCalledWith(
+          expect.objectContaining({
+            url: workspacesUrl,
+            method: 'GET',
+            params: expect.objectContaining({ listAll: 'true' }),
+          })
+        );
+        expect(workspaces).toEqual([
+          { text: 'ws-1', value: 'id-1' },
+          { text: 'ws-2', value: 'id-2' },
+        ]);
+      });
+
+      it('warns when the backend reports the listing was truncated', async () => {
+        backendFetch.mockReturnValue(
+          mockArmPage([{ name: 'ws-1', id: 'id-1', properties: { customerId: 'c1' } }], {
+            'X-Results-Truncated': 'true',
+          })
+        );
+
+        await ctx.datasource.azureLogAnalyticsDatasource.getWorkspaces('sub');
+
+        expect(publishAppEvent).toHaveBeenCalledWith(expect.objectContaining({ type: AppEvents.alertWarning.name }));
+      });
+
+      it('getWorkspacesPage sends listAll=false + nextToken and returns the Link-header cursor', async () => {
+        backendFetch.mockReturnValue(
+          mockArmPage([{ name: 'ws-2', id: 'id-2', properties: { customerId: 'c2' } }], {
+            Link: '<?nextToken=page3>; rel="next"',
+          })
+        );
+
+        const page = await ctx.datasource.azureLogAnalyticsDatasource.getWorkspacesPage('sub', 'page2');
+
+        expect(page.workspaces).toEqual([{ text: 'ws-2', value: 'id-2' }]);
+        expect(page.nextToken).toBe('page3');
+        expect(backendFetch).toHaveBeenCalledWith({
+          url: workspacesUrl,
+          params: { listAll: 'false', nextToken: 'page2' },
           method: 'GET',
-          params: expect.objectContaining({ listAll: 'true' }),
-        })
-      );
-      expect(workspaces).toEqual([
-        { text: 'ws-1', value: 'id-1' },
-        { text: 'ws-2', value: 'id-2' },
-      ]);
+        });
+      });
     });
 
-    it('warns when the backend reports the listing was truncated', async () => {
-      backendFetch.mockReturnValue(
-        mockArmPage([{ name: 'ws-1', id: 'id-1', properties: { customerId: 'c1' } }], {
-          'X-Results-Truncated': 'true',
-        })
-      );
+    describe('with server-side pagination disabled (flag OFF)', () => {
+      it('follows the raw ARM nextLink chain, rewritten to the passthrough path', async () => {
+        backendFetch
+          .mockReturnValueOnce(
+            mockRawArmPage(
+              [{ name: 'ws-1', id: 'id-1', properties: { customerId: 'c1' } }],
+              'https://management.azure.com/subscriptions/sub/providers/Microsoft.OperationalInsights/workspaces?api-version=2017-04-26-preview&$skiptoken=tok2'
+            )
+          )
+          .mockReturnValueOnce(mockRawArmPage([{ name: 'ws-2', id: 'id-2', properties: { customerId: 'c2' } }]));
 
-      await ctx.datasource.azureLogAnalyticsDatasource.getWorkspaces('sub');
+        const workspaces = await ctx.datasource.azureLogAnalyticsDatasource.getWorkspaces('sub');
 
-      expect(publishAppEvent).toHaveBeenCalledWith(expect.objectContaining({ type: AppEvents.alertWarning.name }));
+        expect(workspaces).toEqual([
+          { text: 'ws-1', value: 'id-1' },
+          { text: 'ws-2', value: 'id-2' },
+        ]);
+        expect(backendFetch).toHaveBeenCalledTimes(2);
+        expect(backendFetch.mock.calls[0][0].url).toBe(workspacesUrl);
+        expect(backendFetch.mock.calls[0][0].params).toEqual({});
+        expect(backendFetch.mock.calls[1][0].url).toBe(
+          '/api/datasources/uid/la-uid/resources/azuremonitor/subscriptions/sub/providers/Microsoft.OperationalInsights/workspaces?api-version=2017-04-26-preview&$skiptoken=tok2'
+        );
+      });
+
+      it('getWorkspacesPage derives the $skiptoken from the body nextLink and sends it back', async () => {
+        backendFetch.mockReturnValueOnce(
+          mockRawArmPage(
+            [{ name: 'ws-1', id: 'id-1', properties: { customerId: 'c1' } }],
+            'https://management.azure.com/subscriptions/sub/providers/Microsoft.OperationalInsights/workspaces?api-version=2017-04-26-preview&$skiptoken=fromBody'
+          )
+        );
+
+        const first = await ctx.datasource.azureLogAnalyticsDatasource.getWorkspacesPage('sub');
+        expect(first.nextToken).toBe('fromBody');
+
+        backendFetch.mockReturnValueOnce(
+          mockRawArmPage([{ name: 'ws-2', id: 'id-2', properties: { customerId: 'c2' } }])
+        );
+        const second = await ctx.datasource.azureLogAnalyticsDatasource.getWorkspacesPage('sub', first.nextToken);
+        expect(second.workspaces).toEqual([{ text: 'ws-2', value: 'id-2' }]);
+        expect(backendFetch.mock.calls[1][0].url).toBe(
+          '/api/datasources/uid/la-uid/resources/azuremonitor/subscriptions/sub/providers/Microsoft.OperationalInsights/workspaces?api-version=2017-04-26-preview&$skiptoken=fromBody'
+        );
+      });
     });
   });
 
