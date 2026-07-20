@@ -140,7 +140,7 @@ func TestHandleSubscriptions(t *testing.T) {
 		s := newPaginationTestService(srv.URL, srv.Client())
 
 		rw := httptest.NewRecorder()
-		req, err := http.NewRequest(http.MethodGet, "http://foo/azuremonitor/subscriptions?listAll=false", nil)
+		req, err := http.NewRequest(http.MethodGet, "http://foo/azuremonitor/subscriptions?api-version=2019-03-01&listAll=false", nil)
 		require.NoError(t, err)
 		s.handleResourceReq(azureMonitor)(rw, withPaginationFlag(req))
 
