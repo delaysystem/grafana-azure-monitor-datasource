@@ -173,7 +173,7 @@ func (s *DataSource) listArmResourceProxy(rw http.ResponseWriter, req *http.Requ
 	if enc := q.Encode(); enc != "" {
 		armPath += "?" + enc
 	}
-	s.listArmResource(rw, req, serviceName, armPath, nil)
+	s.listArmResource(rw, req, serviceName, armPath, q)
 }
 
 func (s *DataSource) listArmResource(rw http.ResponseWriter, req *http.Request, serviceName, armPath string, linkParams url.Values) {
