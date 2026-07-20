@@ -12,8 +12,10 @@ import (
 	"testing"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+	"github.com/grafana/grafana-plugin-sdk-go/config"
 	"github.com/stretchr/testify/require"
 
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/metrics"
 	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/types"
 )
 
@@ -83,15 +85,22 @@ func decodeSubscriptionIDs(t *testing.T, body []byte) []string {
 	return ids
 }
 
+func withPaginationFlag(req *http.Request) *http.Request {
+	ctx := config.WithGrafanaConfig(req.Context(), config.NewGrafanaCfg(map[string]string{
+		"GF_INSTANCE_FEATURE_TOGGLES_ENABLE": "azureMonitorServerSidePagination",
+	}))
+	return req.WithContext(ctx)
+}
+
 func TestHandleSubscriptions(t *testing.T) {
 	t.Run("single page returns all items with no cursor", func(t *testing.T) {
 		srv, count, _ := newArmPagingServer(t, 1, 3)
 		s := newPaginationTestService(srv.URL, srv.Client())
 
 		rw := httptest.NewRecorder()
-		req, err := http.NewRequest(http.MethodGet, "http://foo/subscriptions", nil)
+		req, err := http.NewRequest(http.MethodGet, "http://foo/azuremonitor/subscriptions?api-version=2019-03-01", nil)
 		require.NoError(t, err)
-		s.armListHandler(armListEndpoints()["/subscriptions"])(rw, req)
+		s.handleResourceReq(azureMonitor)(rw, withPaginationFlag(req))
 
 		res := rw.Result()
 		require.Equal(t, http.StatusOK, res.StatusCode)
@@ -109,9 +118,9 @@ func TestHandleSubscriptions(t *testing.T) {
 		s := newPaginationTestService(srv.URL, srv.Client())
 
 		rw := httptest.NewRecorder()
-		req, err := http.NewRequest(http.MethodGet, "http://foo/subscriptions?listAll=true", nil)
+		req, err := http.NewRequest(http.MethodGet, "http://foo/azuremonitor/subscriptions?api-version=2019-03-01&listAll=true", nil)
 		require.NoError(t, err)
-		s.armListHandler(armListEndpoints()["/subscriptions"])(rw, req)
+		s.handleResourceReq(azureMonitor)(rw, withPaginationFlag(req))
 
 		res := rw.Result()
 		require.Equal(t, http.StatusOK, res.StatusCode)
@@ -131,9 +140,9 @@ func TestHandleSubscriptions(t *testing.T) {
 		s := newPaginationTestService(srv.URL, srv.Client())
 
 		rw := httptest.NewRecorder()
-		req, err := http.NewRequest(http.MethodGet, "http://foo/subscriptions?listAll=false", nil)
+		req, err := http.NewRequest(http.MethodGet, "http://foo/azuremonitor/subscriptions?listAll=false", nil)
 		require.NoError(t, err)
-		s.armListHandler(armListEndpoints()["/subscriptions"])(rw, req)
+		s.handleResourceReq(azureMonitor)(rw, withPaginationFlag(req))
 
 		res := rw.Result()
 		require.Equal(t, http.StatusOK, res.StatusCode)
@@ -149,19 +158,26 @@ func TestHandleSubscriptions(t *testing.T) {
 		require.Equal(t, []string{"sub-1", "sub-2"}, decodeSubscriptionIDs(t, body))
 	})
 
-	t.Run("on-demand mode re-injects the continuation token", func(t *testing.T) {
-		srv, count, tokens := newArmPagingServer(t, 3, 2)
+	t.Run("on-demand mode re-injects the continuation token as $skiptoken only", func(t *testing.T) {
+		var rawQuery string
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			rawQuery = r.URL.RawQuery
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"value":[{"subscriptionId":"sub-3"},{"subscriptionId":"sub-4"}]}`))
+		}))
+		t.Cleanup(srv.Close)
 		s := newPaginationTestService(srv.URL, srv.Client())
 
 		rw := httptest.NewRecorder()
-		req, err := http.NewRequest(http.MethodGet, "http://foo/subscriptions?listAll=false&nextToken=page2", nil)
+		req, err := http.NewRequest(http.MethodGet, "http://foo/azuremonitor/subscriptions?listAll=false&nextToken=page2", nil)
 		require.NoError(t, err)
-		s.armListHandler(armListEndpoints()["/subscriptions"])(rw, req)
+		s.handleResourceReq(azureMonitor)(rw, withPaginationFlag(req))
 
 		res := rw.Result()
 		require.Equal(t, http.StatusOK, res.StatusCode)
-		require.Equal(t, 1, *count)
-		require.Equal(t, []string{"page2"}, *tokens)
+		require.Contains(t, rawQuery, "skiptoken=page2")
+		require.NotContains(t, rawQuery, "nextToken")
+		require.NotContains(t, rawQuery, "listAll")
 
 		body, err := readAllClose(res)
 		require.NoError(t, err)
@@ -173,9 +189,9 @@ func TestHandleSubscriptions(t *testing.T) {
 		s := newPaginationTestService(srv.URL, srv.Client())
 
 		rw := httptest.NewRecorder()
-		req, err := http.NewRequest(http.MethodGet, "http://foo/subscriptions", nil)
+		req, err := http.NewRequest(http.MethodGet, "http://foo/azuremonitor/subscriptions", nil)
 		require.NoError(t, err)
-		s.armListHandler(armListEndpoints()["/subscriptions"])(rw, req)
+		s.handleResourceReq(azureMonitor)(rw, withPaginationFlag(req))
 
 		res := rw.Result()
 		require.Equal(t, http.StatusOK, res.StatusCode)
@@ -195,9 +211,9 @@ func TestHandleSubscriptions(t *testing.T) {
 		s := newPaginationTestService(srv.URL, srv.Client())
 
 		rw := httptest.NewRecorder()
-		req, err := http.NewRequest(http.MethodGet, "http://foo/subscriptions?listAll=true", nil)
+		req, err := http.NewRequest(http.MethodGet, "http://foo/azuremonitor/subscriptions?listAll=true", nil)
 		require.NoError(t, err)
-		s.armListHandler(armListEndpoints()["/subscriptions"])(rw, req)
+		s.handleResourceReq(azureMonitor)(rw, withPaginationFlag(req))
 
 		res := rw.Result()
 		require.Equal(t, http.StatusOK, res.StatusCode)
@@ -221,24 +237,42 @@ func TestHandleSubscriptions(t *testing.T) {
 		s := newPaginationTestService(srv.URL, srv.Client())
 
 		rw := httptest.NewRecorder()
-		req, err := http.NewRequest(http.MethodGet, "http://foo/subscriptions", nil)
+		req, err := http.NewRequest(http.MethodGet, "http://foo/azuremonitor/subscriptions", nil)
 		require.NoError(t, err)
-		s.armListHandler(armListEndpoints()["/subscriptions"])(rw, req)
+		s.handleResourceReq(azureMonitor)(rw, withPaginationFlag(req))
 
 		require.Equal(t, http.StatusBadGateway, rw.Result().StatusCode)
+	})
+
+	t.Run("flag off proxies the request verbatim", func(t *testing.T) {
+		proxy := &fakeProxy{}
+		s := DataSource{
+			info: types.DatasourceInfo{
+				Services: map[string]types.DatasourceService{
+					azureMonitor: {
+						URL:        "https://management.azure.com",
+						HTTPClient: &http.Client{},
+						Logger:     log.DefaultLogger,
+					},
+				},
+			},
+			executors: map[string]azDatasourceExecutor{
+				azureMonitor: &metrics.AzureMonitorDatasource{Proxy: proxy},
+			},
+			logger: log.DefaultLogger,
+		}
+
+		rw := httptest.NewRecorder()
+		req, err := http.NewRequest(http.MethodGet, "http://foo/azuremonitor/subscriptions?api-version=2019-03-01&listAll=true", nil)
+		require.NoError(t, err)
+		s.handleResourceReq(azureMonitor)(rw, req)
+
+		require.Equal(t, "https://management.azure.com/subscriptions?api-version=2019-03-01&listAll=true", proxy.requestedURL)
+		require.Empty(t, rw.Result().Header.Get("Link"))
 	})
 }
 
 func TestHandleWorkspaces(t *testing.T) {
-	t.Run("requires subscriptionId", func(t *testing.T) {
-		s := newPaginationTestService("https://management.azure.com", &http.Client{})
-		rw := httptest.NewRecorder()
-		req, err := http.NewRequest(http.MethodGet, "http://foo/workspaces", nil)
-		require.NoError(t, err)
-		s.armListHandler(armListEndpoints()["/workspaces"])(rw, req)
-		require.Equal(t, http.StatusBadRequest, rw.Result().StatusCode)
-	})
-
 	t.Run("targets the workspaces path for the subscription", func(t *testing.T) {
 		var requestedPath string
 		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -250,9 +284,9 @@ func TestHandleWorkspaces(t *testing.T) {
 		s := newPaginationTestService(srv.URL, srv.Client())
 
 		rw := httptest.NewRecorder()
-		req, err := http.NewRequest(http.MethodGet, "http://foo/workspaces?subscriptionId=sub-42", nil)
+		req, err := http.NewRequest(http.MethodGet, "http://foo/azuremonitor/subscriptions/sub-42/providers/Microsoft.OperationalInsights/workspaces?api-version=2017-04-26-preview", nil)
 		require.NoError(t, err)
-		s.armListHandler(armListEndpoints()["/workspaces"])(rw, req)
+		s.handleResourceReq(azureMonitor)(rw, withPaginationFlag(req))
 
 		require.Equal(t, http.StatusOK, rw.Result().StatusCode)
 		require.Equal(t, "/subscriptions/sub-42/providers/Microsoft.OperationalInsights/workspaces", requestedPath)

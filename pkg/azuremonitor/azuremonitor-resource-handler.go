@@ -12,6 +12,7 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+	"github.com/grafana/grafana-plugin-sdk-go/config"
 )
 
 func getTarget(original string) (target string, err error) {
@@ -125,6 +126,12 @@ func (s *DataSource) handleResourceReq(subDataSource string) func(rw http.Respon
 			return
 		}
 
+		if subDataSource == azureMonitor && req.Method == http.MethodGet && isArmListPath(newPath) &&
+			config.GrafanaConfigFromContext(req.Context()).FeatureToggles().IsEnabled("azureMonitorServerSidePagination") {
+			s.listArmResourceProxy(rw, req, azureMonitor, newPath)
+			return
+		}
+
 		dsInfo := s.info
 
 		service := dsInfo.Services[subDataSource]
@@ -145,45 +152,21 @@ func (s *DataSource) handleResourceReq(subDataSource string) func(rw http.Respon
 	}
 }
 
-type armListEndpoint struct {
-	service   string
-	buildPath func(query url.Values) (path string, linkParams url.Values, err error)
+var workspacesListRe = regexp.MustCompile(`^/subscriptions/[^/]+/providers/Microsoft\.OperationalInsights/workspaces$`)
+
+func isArmListPath(p string) bool {
+	return p == "/subscriptions" || workspacesListRe.MatchString(p)
 }
 
-func armListEndpoints() map[string]armListEndpoint {
-	return map[string]armListEndpoint{
-		"/subscriptions": {
-			service: azureMonitor,
-			buildPath: func(url.Values) (string, url.Values, error) {
-				return "/subscriptions?api-version=2019-03-01", nil, nil
-			},
-		},
-		"/workspaces": {
-			service: azureMonitor,
-			buildPath: func(query url.Values) (string, url.Values, error) {
-				subscriptionID := query.Get("subscriptionId")
-				if subscriptionID == "" {
-					return "", nil, errors.New("subscriptionId is required")
-				}
-				path := fmt.Sprintf(
-					"/subscriptions/%s/providers/Microsoft.OperationalInsights/workspaces?api-version=2017-04-26-preview",
-					url.PathEscape(subscriptionID),
-				)
-				return path, url.Values{"subscriptionId": {subscriptionID}}, nil
-			},
-		},
+func (s *DataSource) listArmResourceProxy(rw http.ResponseWriter, req *http.Request, serviceName, strippedPath string) {
+	q := req.URL.Query()
+	q.Del("listAll")
+	q.Del("nextToken")
+	armPath := strippedPath
+	if enc := q.Encode(); enc != "" {
+		armPath += "?" + enc
 	}
-}
-
-func (s *DataSource) armListHandler(ep armListEndpoint) func(rw http.ResponseWriter, req *http.Request) {
-	return func(rw http.ResponseWriter, req *http.Request) {
-		path, linkParams, err := ep.buildPath(req.URL.Query())
-		if err != nil {
-			writeErrorResponse(rw, http.StatusBadRequest, err.Error())
-			return
-		}
-		s.listArmResource(rw, req, ep.service, path, linkParams)
-	}
+	s.listArmResource(rw, req, serviceName, armPath, nil)
 }
 
 func (s *DataSource) listArmResource(rw http.ResponseWriter, req *http.Request, serviceName, armPath string, linkParams url.Values) {
@@ -229,10 +212,5 @@ func (s *DataSource) newResourceMux() *http.ServeMux {
 	mux.HandleFunc("/azuremonitor/", s.handleResourceReq(azureMonitor))
 	mux.HandleFunc("/loganalytics/", s.handleResourceReq(azureLogAnalytics))
 	mux.HandleFunc("/resourcegraph/", s.handleResourceReq(azureResourceGraph))
-	for route, ep := range armListEndpoints() {
-		handler := s.armListHandler(ep)
-		mux.HandleFunc(route, handler)
-		mux.HandleFunc(route+"/{$}", handler)
-	}
 	return mux
 }
