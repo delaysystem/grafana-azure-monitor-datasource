@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import * as React from 'react';
 
 import { t } from '@grafana/i18n';
 import { Collapse, Space } from '@grafana/ui';

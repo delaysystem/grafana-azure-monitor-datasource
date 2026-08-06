@@ -1,6 +1,5 @@
 import { cx } from '@emotion/css';
 import { useCallback, useEffect, useState } from 'react';
-import * as React from 'react';
 
 import { Trans, t } from '@grafana/i18n';
 import { Button, Icon, Modal, useStyles2, type IconName } from '@grafana/ui';

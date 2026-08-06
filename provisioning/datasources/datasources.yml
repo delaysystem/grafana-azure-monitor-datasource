@@ -2,7 +2,7 @@ apiVersion: 1
 
 datasources:
   - name: 'Azure Monitor'
-    type: 'grafana-azuremonitor-datasource'
+    type: 'grafana-azure-monitor-datasource'
     access: proxy
     isDefault: false
     orgId: 1

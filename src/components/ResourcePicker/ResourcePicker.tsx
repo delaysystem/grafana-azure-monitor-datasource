@@ -1,7 +1,6 @@
 import { cx } from '@emotion/css';
 import { uniqBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import * as React from 'react';
 import { useEffectOnce } from 'react-use';
 
 import { LocalStorageValueProvider } from '@grafana/data';
