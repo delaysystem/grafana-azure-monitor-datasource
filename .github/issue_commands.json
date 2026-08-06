@@ -1,7 +1,7 @@
 [
   {
     "type": "label",
-    "name": "{{DATASOURCE_LABEL}}",
+    "name": "datasource/Azure",
     "action": "addToProject",
     "addToProject": {
       "url": "https://github.com/orgs/grafana/projects/1085"
