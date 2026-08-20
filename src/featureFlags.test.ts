@@ -15,7 +15,6 @@ const batchFlagConfig = (enabled: boolean) => ({
 
 describe('featureFlags', () => {
   afterEach(async () => {
-    // @ts-expect-error datasources.azureMonitorBatchAPI is not yet in the FeatureToggles type published by @grafana/data
     config.featureToggles[BATCH_API_FLAG] = undefined;
     await OpenFeature.clearProviders();
   });
@@ -24,7 +23,6 @@ describe('featureFlags', () => {
     it('falls back to config.featureToggles when no provider is registered', () => {
       expect(isBatchAPIFlagEnabled()).toBe(false);
 
-      // @ts-expect-error datasources.azureMonitorBatchAPI is not yet in the FeatureToggles type published by @grafana/data
       config.featureToggles[BATCH_API_FLAG] = true;
       expect(isBatchAPIFlagEnabled()).toBe(true);
     });
@@ -38,7 +36,6 @@ describe('featureFlags', () => {
     });
 
     it('prefers the provider value over the config.featureToggles fallback', async () => {
-      // @ts-expect-error datasources.azureMonitorBatchAPI is not yet in the FeatureToggles type published by @grafana/data
       config.featureToggles[BATCH_API_FLAG] = true;
       await OpenFeature.setProviderAndWait(OPEN_FEATURE_DOMAIN, new InMemoryProvider(batchFlagConfig(false)));
       expect(isBatchAPIFlagEnabled()).toBe(false);
@@ -46,7 +43,6 @@ describe('featureFlags', () => {
 
     it('falls back to config.featureToggles when the flag is missing from a ready provider', async () => {
       // Matches production OFREP bulk responses that omit the flag entirely.
-      // @ts-expect-error datasources.azureMonitorBatchAPI is not yet in the FeatureToggles type published by @grafana/data
       config.featureToggles[BATCH_API_FLAG] = true;
       await OpenFeature.setProviderAndWait(OPEN_FEATURE_DOMAIN, new InMemoryProvider({}));
       expect(isBatchAPIFlagEnabled()).toBe(true);

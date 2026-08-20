@@ -15,6 +15,8 @@ module.exports = {
   transformIgnorePatterns: [
     require('./.config/jest/utils').nodeModulesToTransform([
       ...require('./.config/jest/utils').grafanaESModules,
+      '@react-hookz/web',
+      '@ver0/deep-equal',
       '@grafana/plugin-ui',
       '@marcbachmann/cel-js',
       'monaco-editor',
