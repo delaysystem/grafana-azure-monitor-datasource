@@ -21,7 +21,6 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
 	"github.com/grafana/grafana-plugin-sdk-go/config"
-	schemas "github.com/grafana/schemads"
 
 	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/azmoncredentials"
 	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/loganalytics"
@@ -60,16 +59,7 @@ func NewDatasource(ctx context.Context, settings backend.DataSourceInstanceSetti
 		logger:    logger,
 	}
 	ds.queryMux = ds.newQueryMux()
-	muxHandler := httpadapter.New(ds.newResourceMux())
-	schemaProvider := newMetricsSchema(ds, logger)
-	ds.resourceHandler = schemas.NewSchemaDatasource(
-		schemaProvider,
-		schemaProvider,
-		schemaProvider,
-		schemaProvider,
-		schemaProvider,
-		muxHandler,
-	)
+	ds.resourceHandler = httpadapter.New(ds.newResourceMux())
 	return ds, nil
 }
 
@@ -97,24 +87,7 @@ func (ds *DataSource) QueryData(ctx context.Context, req *backend.QueryDataReque
 		return responses, nil
 	}
 
-	ctxWithUser := azusercontext.WithUserFromQueryReq(ctx, req)
-	req, sqlErrs := ds.normalizeGrafanaSQLRequest(ctxWithUser, req)
-	resp, err := ds.queryMux.QueryData(ctxWithUser, req)
-	if err != nil {
-		return nil, err
-	}
-	if len(sqlErrs) > 0 {
-		if resp.Responses == nil {
-			resp.Responses = make(map[string]backend.DataResponse, len(sqlErrs))
-		}
-		for refID, e := range sqlErrs {
-			resp.Responses[refID] = backend.DataResponse{
-				Error:       e,
-				ErrorSource: backend.ErrorSourceDownstream,
-			}
-		}
-	}
-	return resp, nil
+	return ds.queryMux.QueryData(azusercontext.WithUserFromQueryReq(ctx, req), req)
 }
 
 func (ds *DataSource) CallResource(ctx context.Context, req *backend.CallResourceRequest, sender backend.CallResourceResponseSender) error {
