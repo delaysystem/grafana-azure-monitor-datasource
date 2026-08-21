@@ -135,6 +135,9 @@
     "keywords": [
       "azure",
       "monitor",
+      "metrics",
+      "logs",
+      "cloud",
       "Application Insights",
       "Log Analytics",
       "App Insights"
@@ -208,12 +211,5 @@
     "sv-SE",
     "tr-TR",
     "zh-Hant"
-  ],
-  "keywords": [
-    "azure",
-    "monitor",
-    "metrics",
-    "logs",
-    "cloud"
   ]
 }
