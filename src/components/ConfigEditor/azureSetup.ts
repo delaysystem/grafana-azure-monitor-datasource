@@ -35,7 +35,7 @@ export function parseResourceGroups(output: string): string[] {
   const value = JSON.parse(output);
   if (
     !Array.isArray(value) ||
-    !value.every((name) => typeof name === 'string' && /^[\p{L}\p{N}_.()-]{1,90}$/u.test(name))
+    !value.every((name) => typeof name === 'string' && /^[\p{L}\p{N}_.()-]{1,90}$/u.test(name) && !name.endsWith('.'))
   ) {
     throw new Error('Invalid resource groups');
   }

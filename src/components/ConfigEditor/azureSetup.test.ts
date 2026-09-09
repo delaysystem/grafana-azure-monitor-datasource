@@ -45,12 +45,20 @@ describe('Azure CLI onboarding', () => {
     expect(parseResourceGroups('[]')).toEqual([]);
   });
 
-  it.each(['null', '{}', '[null]', '[1]', '[""]', '["../other"]', '["$(whoami)"]', '["a\\u0027; echo injected"]'])(
-    'rejects malformed or unsafe resource group output: %s',
-    (value) => {
-      expect(() => parseResourceGroups(value)).toThrow();
-    }
-  );
+  it.each([
+    'null',
+    '{}',
+    '[null]',
+    '[1]',
+    '[""]',
+    '["."]',
+    '[".."]',
+    '["../other"]',
+    '["$(whoami)"]',
+    '["a\\u0027; echo injected"]',
+  ])('rejects malformed or unsafe resource group output: %s', (value) => {
+    expect(() => parseResourceGroups(value)).toThrow();
+  });
 
   it('uses individual CLI commands and a fixed Reader role at only the chosen scope', () => {
     expect(accessScope(account)).toBe(`/subscriptions/${account.subscriptionId}`);
