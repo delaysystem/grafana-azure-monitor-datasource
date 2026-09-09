@@ -52,6 +52,9 @@ describe('MonitorConfig', () => {
     render(<MonitorConfig {...defaultProps} options={mockDsSettingsWithoutAuth} />);
 
     expect(defaultProps.updateOptions).toHaveBeenCalled();
+    expect(screen.getByText('Set up Azure access')).toBeInTheDocument();
+    expect(screen.queryByText('Azure Cloud')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Use existing Azure credentials' }));
     expect(screen.getByText('Azure Cloud')).toBeInTheDocument();
   });
 
@@ -117,5 +120,34 @@ describe('MonitorConfig', () => {
     render(<MonitorConfig {...defaultProps} />);
 
     expect(screen.queryByText('Enable Batch API')).not.toBeInTheDocument();
+  });
+
+  it('hides manual credential validation while guided setup is active and restores manual configuration', () => {
+    render(<MonitorConfig {...defaultProps} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Azure Cloud Shell — recommended' }));
+    expect(screen.getByLabelText('Azure account output')).toBeInTheDocument();
+    expect(screen.queryByText('Directory (tenant) ID')).not.toBeInTheDocument();
+    expect(screen.queryByText('Application (client) ID')).not.toBeInTheDocument();
+    expect(screen.queryByText('Client Secret')).not.toBeInTheDocument();
+    expect(screen.queryByText(/required/i)).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Use existing Azure credentials' }));
+    expect(screen.getByText('Azure Cloud')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('abc-123')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Azure account output')).not.toBeInTheDocument();
+  });
+
+  it('offers the same discovery workflow in a local terminal with a login command', () => {
+    render(<MonitorConfig {...defaultProps} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Local terminal' }));
+    expect(screen.getByText('az login')).toBeInTheDocument();
+    expect(screen.getByLabelText('Azure account output')).toBeInTheDocument();
+  });
+
+  it('does not offer guided setup for provisioned read-only settings', () => {
+    render(<MonitorConfig {...defaultProps} options={{ ...defaultProps.options, readOnly: true }} />);
+    expect(screen.queryByText('Set up Azure access')).not.toBeInTheDocument();
+    expect(screen.getByText('Azure Cloud')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('abc-123')).toBeDisabled();
   });
 });
