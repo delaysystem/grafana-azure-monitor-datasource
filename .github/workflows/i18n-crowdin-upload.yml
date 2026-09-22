@@ -10,6 +10,8 @@ on:
 
 jobs:
   upload-sources-to-crowdin:
+    # Temporarily disabled Sept 22 2026
+    if: false
     runs-on: ubuntu-x64
     permissions:
       contents: read
