@@ -1,3 +1,7 @@
+## Unreleased
+
+- Add Dimensions and Dimension Values template variable query types in [#118](https://github.com/grafana/grafana-azure-monitor-datasource/pull/118)
+
 ## 13.0.2
 
 - Bump backend Go dependencies to address CVEs in [#100](https://github.com/grafana/grafana-azure-monitor-datasource/pull/100)
