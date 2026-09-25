@@ -1,6 +1,7 @@
-## Unreleased
+## 13.0.3
 
 - Add Dimensions and Dimension Values template variable query types in [#118](https://github.com/grafana/grafana-azure-monitor-datasource/pull/118)
+- Fix security vulnerabilities (CVE-2026-84375)
 
 ## 13.0.2
 
