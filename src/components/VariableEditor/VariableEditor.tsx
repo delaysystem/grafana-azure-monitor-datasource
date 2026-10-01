@@ -406,6 +406,7 @@ const VariableEditor = (props: Props) => {
             setError={setError}
             hideFormatAs={true}
             basicLogsEnabled={datasource.azureMonitorDatasource.basicLogsEnabled ?? false}
+            auxiliaryLogsEnabled={datasource.azureMonitorDatasource.auxiliaryLogsEnabled ?? false}
           />
           {errorMessage && (
             <>

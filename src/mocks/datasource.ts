@@ -53,7 +53,7 @@ export default function createMockDatasource(overrides?: DeepPartial<Datasource>
     azureLogAnalyticsDatasource: {
       getKustoSchema: () => Promise.resolve(),
       getDeprecatedDefaultWorkSpace: () => 'defaultWorkspaceId',
-      getBasicLogsQueryUsage: jest.fn(),
+      getLogsQueryUsage: jest.fn(),
     },
     resourcePickerData: {
       getSubscriptions: () => jest.fn().mockResolvedValue([]),
