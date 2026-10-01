@@ -105,11 +105,11 @@
       "load-subscriptions": "Charger les abonnements"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "Champ de la dimension {{position}}",
+      "aria-label-operator": "Opérateur de la dimension {{position}}",
+      "aria-label-remove": "Supprimer la dimension {{position}}",
+      "aria-label-value": "Valeur de la dimension {{position}}",
+      "aria-label-values": "Valeurs de la dimension {{position}}",
       "label-dimensions": "Dimensions",
       "placeholder-field": "Champ",
       "placeholder-operation": "Opération",

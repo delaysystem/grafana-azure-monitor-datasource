@@ -105,11 +105,11 @@
       "load-subscriptions": "Muat Langganan"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "Kolom {{position}} dimensi",
+      "aria-label-operator": "Operator {{position}} dimensi",
+      "aria-label-remove": "Hapus {{position}} dimensi",
+      "aria-label-value": "Nilai {{position}} dimensi",
+      "aria-label-values": "Nilai {{position}} dimensi",
       "label-dimensions": "Dimensi",
       "placeholder-field": "Bidang",
       "placeholder-operation": "Pengoperasian",

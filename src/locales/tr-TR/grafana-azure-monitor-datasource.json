@@ -105,11 +105,11 @@
       "load-subscriptions": "Abonelikleri Yükle"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "Boyut {{position}} alanı",
+      "aria-label-operator": "Boyut {{position}} işleci",
+      "aria-label-remove": "{{position}} boyutunu kaldır",
+      "aria-label-value": "Boyut {{position}} değeri",
+      "aria-label-values": "Boyut {{position}} değerleri",
       "label-dimensions": "Boyutlar",
       "placeholder-field": "Alan",
       "placeholder-operation": "Çalıştırma",

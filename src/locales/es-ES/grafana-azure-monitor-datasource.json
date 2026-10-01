@@ -105,11 +105,11 @@
       "load-subscriptions": "Cargar suscripciones"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "Campo de dimensión {{position}}",
+      "aria-label-operator": "Operador de dimensión {{position}}",
+      "aria-label-remove": "Eliminar dimensión {{position}}",
+      "aria-label-value": "Valor de dimensión {{position}}",
+      "aria-label-values": "Valores de dimensión {{position}}",
       "label-dimensions": "Dimensiones",
       "placeholder-field": "Campo",
       "placeholder-operation": "Operación",

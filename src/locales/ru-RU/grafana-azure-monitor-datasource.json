@@ -105,11 +105,11 @@
       "load-subscriptions": "Загрузить подписки"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "Поле измерения {{position}}",
+      "aria-label-operator": "Оператор измерения {{position}}",
+      "aria-label-remove": "Удалить измерение {{position}}",
+      "aria-label-value": "Значение измерения {{position}}",
+      "aria-label-values": "Значения измерения {{position}}",
       "label-dimensions": "Размеры",
       "placeholder-field": "Поле",
       "placeholder-operation": "Операция",

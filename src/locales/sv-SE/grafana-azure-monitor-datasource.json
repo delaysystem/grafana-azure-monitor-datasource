@@ -105,11 +105,11 @@
       "load-subscriptions": "Ladda prenumerationer"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "Dimensionsfält {{position}}",
+      "aria-label-operator": "Dimensionsoperatör {{position}}",
+      "aria-label-remove": "Ta bort dimension {{position}}",
+      "aria-label-value": "Dimensionsvärde {{position}}",
+      "aria-label-values": "Dimensionsvärden {{position}}",
       "label-dimensions": "Mått",
       "placeholder-field": "Fält",
       "placeholder-operation": "Drift",

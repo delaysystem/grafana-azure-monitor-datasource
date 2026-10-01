@@ -105,11 +105,11 @@
       "load-subscriptions": "載入訂閱"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "維度 {{position}} 欄位",
+      "aria-label-operator": "維度 {{position}} 運算子",
+      "aria-label-remove": "移除維度 {{position}}",
+      "aria-label-value": "維度 {{position}} 值",
+      "aria-label-values": "維度 {{position}} 值",
       "label-dimensions": "尺寸",
       "placeholder-field": "欄位",
       "placeholder-operation": "操作",

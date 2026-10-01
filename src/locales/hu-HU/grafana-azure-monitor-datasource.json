@@ -105,11 +105,11 @@
       "load-subscriptions": "Előfizetések betöltése"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "{{position}} dimenzió mezője",
+      "aria-label-operator": "{{position}} dimenzió operátora",
+      "aria-label-remove": "{{position}} dimenzió eltávolítása",
+      "aria-label-value": "{{position}} dimenzió értéke",
+      "aria-label-values": "{{position}} dimenzió értékei",
       "label-dimensions": "Dimenziók",
       "placeholder-field": "Mező",
       "placeholder-operation": "Művelet",

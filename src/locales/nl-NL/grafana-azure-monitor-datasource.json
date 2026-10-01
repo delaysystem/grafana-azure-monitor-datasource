@@ -105,11 +105,11 @@
       "load-subscriptions": "Abonnementen laden"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "Dimensieveld {{position}}",
+      "aria-label-operator": "Dimensieoperator {{position}} ",
+      "aria-label-remove": "Verwijder dimensie {{position}}",
+      "aria-label-value": "Dimensiewaarde {{position}} ",
+      "aria-label-values": "Dimensiewaarden {{position}} ",
       "label-dimensions": "Dimensies",
       "placeholder-field": "Veld",
       "placeholder-operation": "Werking",

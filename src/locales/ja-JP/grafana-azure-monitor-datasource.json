@@ -105,11 +105,11 @@
       "load-subscriptions": "サブスクリプションを読み込む"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "ディメンション{{position}}フィールド",
+      "aria-label-operator": "ディメンション{{position}}演算子",
+      "aria-label-remove": "ディメンション{{position}}を削除",
+      "aria-label-value": "ディメンション{{position}}値",
+      "aria-label-values": "ディメンション{{position}}値",
       "label-dimensions": "ディメンション",
       "placeholder-field": "フィールド",
       "placeholder-operation": "操作",

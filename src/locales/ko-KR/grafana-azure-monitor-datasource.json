@@ -105,11 +105,11 @@
       "load-subscriptions": "구독 불러오기"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "차원 {{position}} 필드",
+      "aria-label-operator": "차원 {{position}} 연산자",
+      "aria-label-remove": "차원 {{position}} 제거",
+      "aria-label-value": "차원 {{position}} 값",
+      "aria-label-values": "차원 {{position}} 값",
       "label-dimensions": "차원",
       "placeholder-field": "필드",
       "placeholder-operation": "연산",

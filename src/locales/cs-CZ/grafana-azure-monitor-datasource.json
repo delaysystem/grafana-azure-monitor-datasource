@@ -105,11 +105,11 @@
       "load-subscriptions": "Načíst předplatné"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "Pole dimenze {{position}}",
+      "aria-label-operator": "Operátor dimenze {{position}}",
+      "aria-label-remove": "Odebrat dimenzi {{position}}",
+      "aria-label-value": "Hodnota dimenze {{position}}",
+      "aria-label-values": "Hodnoty dimenze {{position}}",
       "label-dimensions": "Rozměry",
       "placeholder-field": "Pole",
       "placeholder-operation": "Činnost",

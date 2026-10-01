@@ -105,11 +105,11 @@
       "load-subscriptions": "Załaduj subskrypcje"
     },
     "dimension-fields": {
-      "aria-label-field": "",
-      "aria-label-operator": "",
-      "aria-label-remove": "",
-      "aria-label-value": "",
-      "aria-label-values": "",
+      "aria-label-field": "Pole wymiaru {{position}}",
+      "aria-label-operator": "Operator wymiaru {{position}}",
+      "aria-label-remove": "Usuń wymiar {{position}}",
+      "aria-label-value": "Wartość wymiaru {{position}}",
+      "aria-label-values": "Wartości wymiaru {{position}}",
       "label-dimensions": "Wymiary",
       "placeholder-field": "Pole",
       "placeholder-operation": "Operacja",
