@@ -34,13 +34,17 @@ type AzRoute struct {
 	URL     string
 	Scopes  []string
 	Headers map[string]string
+	Timeout time.Duration
 }
 
 type AzureMonitorSettings struct {
-	SubscriptionId               string `json:"subscriptionId"`
-	LogAnalyticsDefaultWorkspace string `json:"logAnalyticsDefaultWorkspace"`
-	AppInsightsAppId             string `json:"appInsightsAppId"`
-	BatchAPIEnabled              bool   `json:"batchAPIEnabled"`
+	SubscriptionId               string   `json:"subscriptionId"`
+	LogAnalyticsDefaultWorkspace string   `json:"logAnalyticsDefaultWorkspace"`
+	AppInsightsAppId             string   `json:"appInsightsAppId"`
+	BatchAPIEnabled              bool     `json:"batchAPIEnabled"`
+	LogsTimeout                  *float64 `json:"logsTimeout,omitempty"`
+	MetricsTimeout               *float64 `json:"metricsTimeout,omitempty"`
+	ResourceGraphTimeout         *float64 `json:"resourceGraphTimeout,omitempty"`
 }
 
 // AzureMonitorCustomizedCloudSettings is the extended Azure Monitor settings for customized cloud

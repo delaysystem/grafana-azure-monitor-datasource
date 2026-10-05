@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/grafana/grafana-azure-sdk-go/v2/azcredentials"
 	"github.com/grafana/grafana-azure-sdk-go/v2/azsettings"
@@ -85,6 +86,26 @@ func TestHttpClient_AzureCredentials(t *testing.T) {
 			assert.Len(t, provider.opts.Header, 2)
 			assert.Equal(t, res, provider.opts.Header)
 		}
+	})
+
+	t.Run("should override client timeout when a positive timeout is passed", func(t *testing.T) {
+		route := types.AzRoute{Timeout: 45 * time.Second}
+
+		_, err := newHTTPClient(context.Background(), route, model, settings, azureSettings, provider)
+		require.NoError(t, err)
+
+		require.NotNil(t, provider.opts.Timeouts)
+		assert.Equal(t, 45*time.Second, provider.opts.Timeouts.Timeout)
+	})
+
+	t.Run("should apply an explicit zero timeout rather than leaving the SDK default", func(t *testing.T) {
+		route := types.AzRoute{}
+
+		_, err := newHTTPClient(context.Background(), route, model, settings, azureSettings, provider)
+		require.NoError(t, err)
+
+		require.NotNil(t, provider.opts.Timeouts)
+		assert.Equal(t, time.Duration(0), provider.opts.Timeouts.Timeout)
 	})
 }
 

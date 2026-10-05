@@ -16,13 +16,13 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/types"
 	"github.com/grafana/grafana-azure-sdk-go/v2/azcredentials"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/config"
 	"github.com/grafana/grafana-plugin-sdk-go/experimental/featuretoggles"
-	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/types"
 )
 
 var testRoutes = map[string]types.AzRoute{
@@ -30,34 +30,41 @@ var testRoutes = map[string]types.AzRoute{
 		URL:     "https://management.azure.com",
 		Scopes:  []string{"https://management.azure.com/.default"},
 		Headers: map[string]string{"x-ms-app": "Grafana"},
+		Timeout: defaultMetricsTimeout,
 	},
 	azureLogAnalytics: {
 		URL:     "https://api.loganalytics.io",
 		Scopes:  []string{"https://api.loganalytics.io/.default"},
 		Headers: map[string]string{"x-ms-app": "Grafana", "Cache-Control": "public, max-age=60"},
+		Timeout: defaultLogsTimeout,
 	},
 	azureResourceGraph: {
 		URL:     "https://management.azure.com",
 		Scopes:  []string{"https://management.azure.com/.default"},
 		Headers: map[string]string{"x-ms-app": "Grafana"},
+		Timeout: defaultResourceGraphTimeout,
 	},
 	azureTraces: {
 		URL:     "https://api.loganalytics.io",
 		Scopes:  []string{"https://api.loganalytics.io/.default"},
 		Headers: map[string]string{"x-ms-app": "Grafana", "Cache-Control": "public, max-age=60"},
+		Timeout: defaultLogsTimeout,
 	},
 	traceExemplar: {
 		URL:     "https://api.loganalytics.io",
 		Scopes:  []string{"https://api.loganalytics.io/.default"},
 		Headers: map[string]string{"x-ms-app": "Grafana", "Cache-Control": "public, max-age=60"},
+		Timeout: defaultLogsTimeout,
 	},
 	azurePortal: {
-		URL: "https://portal.azure.com",
+		URL:     "https://portal.azure.com",
+		Timeout: defaultMetricsTimeout,
 	},
 	azureMonitorBatchMetrics: {
 		URL:     "https://metrics.monitor.azure.com",
 		Scopes:  []string{"https://metrics.monitor.azure.com/.default"},
 		Headers: map[string]string{"x-ms-app": "Grafana"},
+		Timeout: defaultMetricsTimeout,
 	},
 }
 

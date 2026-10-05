@@ -89,8 +89,26 @@
       "label-enable-batch-api": "Enable Batch API"
     },
     "config-editor": {
+      "aria-label-logs-timeout": "Logs timeout in seconds",
+      "aria-label-metrics-timeout": "Metrics timeout in seconds",
+      "aria-label-resource-graph-timeout": "Resource Graph timeout in seconds",
       "description-additional-settings": "Additional settings are optional settings that can be configured for more control over your data source. This includes Secure Socks Proxy, request timeout, and forwarded cookies.",
-      "title-additional-settings": "Additional settings"
+      "description-advanced-http-settings-logs": "Logs and Traces queries use the Logs timeout.",
+      "description-advanced-http-settings-metrics": "Metrics and Azure Portal links use the Metrics timeout.",
+      "label-allowed-cookies": "Allowed cookies",
+      "label-logs-timeout": "Logs timeout",
+      "label-metrics-timeout": "Metrics timeout",
+      "label-resource-graph-timeout": "Resource Graph timeout",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "New cookie (hit enter to add)",
+      "placeholder-resource-graph-timeout": "30",
+      "title-additional-settings": "Additional settings",
+      "title-advanced-http-settings": "Advanced HTTP settings",
+      "tooltip-allowed-cookies": "Grafana proxy deletes forwarded cookies by default. Specify cookies by name that should be forwarded to the data source.",
+      "tooltip-logs-timeout": "HTTP request timeout for Logs and Traces queries, in seconds. Default: 180s (3 minutes).",
+      "tooltip-metrics-timeout": "HTTP request timeout for Metrics queries, in seconds. Also used when building Azure Portal links. Default: 30s",
+      "tooltip-resource-graph-timeout": "HTTP request timeout for Resource Graph queries, in seconds. Default: 30s"
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "Fallback credentials have been disabled. As user-based authentication only inherently supports requests with a user in scope, features such as alerting, recorded queries, or reporting will not function as expected. Please review the <2>documentation</2> for more details.",

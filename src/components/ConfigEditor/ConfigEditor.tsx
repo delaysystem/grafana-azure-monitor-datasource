@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useEffect, useState, type ChangeEvent } from 'react';
 
 import {
   type DataSourcePluginOptionsEditorProps,
@@ -6,9 +6,9 @@ import {
   updateDatasourcePluginOption,
 } from '@grafana/data';
 import { t } from '@grafana/i18n';
-import { AdvancedHttpSettings, ConfigSection, DataSourceDescription } from '@grafana/plugin-ui';
+import { ConfigSection, ConfigSubSection, DataSourceDescription } from '@grafana/plugin-ui';
 import { getBackendSrv, isFetchError, config } from '@grafana/runtime';
-import { Alert, Divider, SecureSocksProxySettings } from '@grafana/ui';
+import { Alert, Divider, InlineField, Input, SecureSocksProxySettings, TagsInput } from '@grafana/ui';
 
 import ResponseParser from '../../azure_monitor/response_parser';
 import {
@@ -40,6 +40,35 @@ export const ConfigEditor = memo(function ConfigEditor(props: Props) {
 
   const baseURL = `/api/datasources/uid/${options.uid}/resources/${routeNames.azureMonitor}/subscriptions`;
 
+  // One-time migration: if this datasource still has the
+  // deprecated shared `timeout`, copy it into any per-service field that
+  // isn't already explicitly set, drop `timeout`, and save immediately - no
+  // user action required.
+  useEffect(() => {
+    if (options.readOnly) {
+      return;
+    }
+
+    if (options.jsonData.timeout === undefined) {
+      return;
+    }
+
+    const { timeout, ...jsonData } = options.jsonData;
+    const migrated: AzureMonitorDataSourceSettings = {
+      ...options,
+      jsonData: {
+        ...jsonData,
+        logsTimeout: jsonData.logsTimeout ?? timeout,
+        metricsTimeout: jsonData.metricsTimeout ?? timeout,
+        resourceGraphTimeout: jsonData.resourceGraphTimeout ?? timeout,
+      },
+    };
+
+    onOptionsChange(migrated);
+    saveOptions(migrated, true).catch(() => setUnsaved(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function updateOptions(
     optionsFunc: (options: AzureMonitorDataSourceSettings) => AzureMonitorDataSourceSettings
   ): void {
@@ -48,16 +77,41 @@ export const ConfigEditor = memo(function ConfigEditor(props: Props) {
     setUnsaved(true);
   }
 
-  async function saveOptions(): Promise<void> {
-    if (unsaved) {
+  async function saveOptions(targetOptions: AzureMonitorDataSourceSettings = options, force = false): Promise<void> {
+    if (unsaved || force) {
       await getBackendSrv()
-        .put(`/api/datasources/uid/${options.uid}`, options)
+        .put(`/api/datasources/uid/${targetOptions.uid}`, targetOptions)
         .then((result: { datasource: AzureMonitorDataSourceSettings }) => {
           updateDatasourcePluginOption(props, 'version', result.datasource.version);
         });
 
       setUnsaved(false);
     }
+  }
+
+  function onCookiesChange(cookies: string[]): void {
+    updateOptions((options) => ({
+      ...options,
+      jsonData: {
+        ...options.jsonData,
+        keepCookies: cookies,
+      },
+    }));
+  }
+
+  function onTimeoutFieldChange(field: 'logsTimeout' | 'metricsTimeout' | 'resourceGraphTimeout') {
+    return (event: ChangeEvent<HTMLInputElement>) => {
+      const raw = event.currentTarget.value;
+      const parsed = Number(raw);
+      const value = raw === '' || !Number.isFinite(parsed) || parsed < 0 ? undefined : parsed;
+      updateOptions((options) => ({
+        ...options,
+        jsonData: {
+          ...options.jsonData,
+          [field]: value,
+        },
+      }));
+    };
   }
 
   async function getSubscriptions(): Promise<Array<SelectableValue<string>>> {
@@ -114,10 +168,113 @@ export const ConfigEditor = memo(function ConfigEditor(props: Props) {
           isInitiallyOpen={
             options.jsonData.enableSecureSocksProxy !== undefined ||
             options.jsonData.timeout !== undefined ||
+            options.jsonData.logsTimeout !== undefined ||
+            options.jsonData.metricsTimeout !== undefined ||
+            options.jsonData.resourceGraphTimeout !== undefined ||
             options.jsonData.keepCookies !== undefined
           }
         >
-          <AdvancedHttpSettings config={options} onChange={onOptionsChange} />
+          <ConfigSubSection
+            title={t('components.config-editor.title-advanced-http-settings', 'Advanced HTTP settings')}
+            description={
+              <>
+                {t(
+                  'components.config-editor.description-advanced-http-settings-logs',
+                  'Logs and Traces queries use the Logs timeout.'
+                )}
+                <br />
+                {t(
+                  'components.config-editor.description-advanced-http-settings-metrics',
+                  'Metrics and Azure Portal links use the Metrics timeout.'
+                )}
+              </>
+            }
+          >
+            <InlineField
+              htmlFor="advanced-http-cookies"
+              label={t('components.config-editor.label-allowed-cookies', 'Allowed cookies')}
+              labelWidth={24}
+              tooltip={t(
+                'components.config-editor.tooltip-allowed-cookies',
+                'Grafana proxy deletes forwarded cookies by default. Specify cookies by name that should be forwarded to the data source.'
+              )}
+              disabled={options.readOnly}
+              grow
+            >
+              <TagsInput
+                id="advanced-http-cookies"
+                placeholder={t('components.config-editor.placeholder-new-cookie', 'New cookie (hit enter to add)')}
+                tags={options.jsonData.keepCookies}
+                onChange={onCookiesChange}
+              />
+            </InlineField>
+            <InlineField
+              htmlFor="advanced-http-logs-timeout"
+              label={t('components.config-editor.label-logs-timeout', 'Logs timeout')}
+              labelWidth={24}
+              tooltip={t(
+                'components.config-editor.tooltip-logs-timeout',
+                'HTTP request timeout for Logs and Traces queries, in seconds. Default: 180s (3 minutes).'
+              )}
+              disabled={options.readOnly}
+              grow
+            >
+              <Input
+                id="advanced-http-logs-timeout"
+                type="number"
+                min={0}
+                placeholder={t('components.config-editor.placeholder-logs-timeout', '180')}
+                aria-label={t('components.config-editor.aria-label-logs-timeout', 'Logs timeout in seconds')}
+                value={options.jsonData.logsTimeout ?? ''}
+                onChange={onTimeoutFieldChange('logsTimeout')}
+              />
+            </InlineField>
+            <InlineField
+              htmlFor="advanced-http-metrics-timeout"
+              label={t('components.config-editor.label-metrics-timeout', 'Metrics timeout')}
+              labelWidth={24}
+              tooltip={t(
+                'components.config-editor.tooltip-metrics-timeout',
+                'HTTP request timeout for Metrics queries, in seconds. Also used when building Azure Portal links. Default: 30s'
+              )}
+              disabled={options.readOnly}
+              grow
+            >
+              <Input
+                id="advanced-http-metrics-timeout"
+                type="number"
+                min={0}
+                placeholder={t('components.config-editor.placeholder-metrics-timeout', '30')}
+                aria-label={t('components.config-editor.aria-label-metrics-timeout', 'Metrics timeout in seconds')}
+                value={options.jsonData.metricsTimeout ?? ''}
+                onChange={onTimeoutFieldChange('metricsTimeout')}
+              />
+            </InlineField>
+            <InlineField
+              htmlFor="advanced-http-resource-graph-timeout"
+              label={t('components.config-editor.label-resource-graph-timeout', 'Resource Graph timeout')}
+              labelWidth={24}
+              tooltip={t(
+                'components.config-editor.tooltip-resource-graph-timeout',
+                'HTTP request timeout for Resource Graph queries, in seconds. Default: 30s'
+              )}
+              disabled={options.readOnly}
+              grow
+            >
+              <Input
+                id="advanced-http-resource-graph-timeout"
+                type="number"
+                min={0}
+                placeholder={t('components.config-editor.placeholder-resource-graph-timeout', '30')}
+                aria-label={t(
+                  'components.config-editor.aria-label-resource-graph-timeout',
+                  'Resource Graph timeout in seconds'
+                )}
+                value={options.jsonData.resourceGraphTimeout ?? ''}
+                onChange={onTimeoutFieldChange('resourceGraphTimeout')}
+              />
+            </InlineField>
+          </ConfigSubSection>
           {config.secureSocksDSProxyEnabled && (
             <SecureSocksProxySettings options={options} onOptionsChange={onOptionsChange} />
           )}

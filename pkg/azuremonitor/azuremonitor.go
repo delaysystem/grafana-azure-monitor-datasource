@@ -148,6 +148,12 @@ func NewInstanceSettings(clientProvider *httpclient.Provider, executors map[stri
 			return nil, err
 		}
 
+		legacy := legacyTimeout(jsonData)
+		for name, route := range routesForModel {
+			route.Timeout = resolveTimeout(name, azMonitorSettings, legacy)
+			routesForModel[name] = route
+		}
+
 		if credentials.AzureAuthType() == azcredentials.AzureAuthCurrentUserIdentity && !config.GrafanaConfigFromContext(ctx).FeatureToggles().IsEnabled("azureMonitorEnableUserAuth") {
 			return nil, backend.DownstreamError(errors.New("current user authentication is not enabled for azure monitor"))
 		}
