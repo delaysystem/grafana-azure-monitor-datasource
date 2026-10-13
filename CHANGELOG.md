@@ -1,3 +1,7 @@
+## 13.0.4
+
+- Bump frontend dependency `brace-expansion` to address CVE-2026-102276 and CVE-2026-102278
+
 ## 13.0.3
 
 - Add Dimensions and Dimension Values template variable query types in [#118](https://github.com/grafana/grafana-azure-monitor-datasource/pull/118)
