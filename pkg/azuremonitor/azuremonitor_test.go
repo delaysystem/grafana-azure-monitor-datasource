@@ -680,3 +680,26 @@ func Test_QueryData(t *testing.T) {
 		})
 	}
 }
+
+func TestNewQueryMux_UnhandledQueryTypeErrorSource(t *testing.T) {
+	tests := []struct {
+		name        string
+		queryType   string
+		expectedSrc backend.ErrorSource
+	}{
+		{name: "empty query type is a downstream error", queryType: "", expectedSrc: backend.ErrorSourceDownstream},
+		{name: "unknown query type is a plugin error", queryType: "Unknown", expectedSrc: backend.ErrorSourcePlugin},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ds := &DataSource{executors: map[string]azDatasourceExecutor{}}
+			res, err := ds.newQueryMux().QueryData(context.Background(), &backend.QueryDataRequest{
+				Queries: []backend.DataQuery{{RefID: "A", QueryType: tt.queryType}},
+			})
+			require.NoError(t, err)
+			require.Error(t, res.Responses["A"].Error)
+			require.Contains(t, res.Responses["A"].Error.Error(), "no handler found for query type '"+tt.queryType+"'")
+			require.Equal(t, tt.expectedSrc, res.Responses["A"].ErrorSource)
+		})
+	}
+}
