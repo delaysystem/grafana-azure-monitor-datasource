@@ -8,7 +8,6 @@ module.exports = {
     // handlers) are forwarded to the DOM node. See the mock for details.
     'react-inlinesvg': '<rootDir>/src/__mocks__/react-inlinesvg.tsx',
     '^monaco-editor$': '<rootDir>/src/__mocks__/monaco-editor.ts',
-    '^@openfeature/react-sdk$': '<rootDir>/src/__mocks__/@openfeature/react-sdk.ts',
     '^@grafana/test-utils$': '<rootDir>/src/__mocks__/@grafana/test-utils.ts',
     '^@kusto/monaco-kusto$': '<rootDir>/src/__mocks__/@kusto/monaco-kusto.ts',
   },

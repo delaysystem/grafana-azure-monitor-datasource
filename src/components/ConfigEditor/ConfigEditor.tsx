@@ -1,3 +1,4 @@
+import { OpenFeatureProvider } from '@openfeature/react-sdk';
 import { memo, useEffect, useState, type ChangeEvent } from 'react';
 
 import {
@@ -11,6 +12,7 @@ import { getBackendSrv, isFetchError, config } from '@grafana/runtime';
 import { Alert, Divider, InlineField, Input, SecureSocksProxySettings, TagsInput } from '@grafana/ui';
 
 import ResponseParser from '../../azure_monitor/response_parser';
+import { OPEN_FEATURE_DOMAIN } from '../../featureFlags';
 import {
   type AzureAPIResponse,
   type AzureMonitorDataSourceJsonData,
@@ -142,7 +144,7 @@ export const ConfigEditor = memo(function ConfigEditor(props: Props) {
   }
 
   return (
-    <>
+    <OpenFeatureProvider domain={OPEN_FEATURE_DOMAIN}>
       <DataSourceDescription
         dataSourceName="Azure Monitor"
         docsLink="https://grafana.com/docs/grafana/latest/datasources/azure-monitor/"
@@ -280,6 +282,6 @@ export const ConfigEditor = memo(function ConfigEditor(props: Props) {
           )}
         </ConfigSection>
       </>
-    </>
+    </OpenFeatureProvider>
   );
 });
