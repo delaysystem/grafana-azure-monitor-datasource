@@ -1,3 +1,7 @@
+## 13.0.5
+
+- Chore: Sync new PRs from grafana/grafana in [#123](https://github.com/grafana/grafana-azure-monitor-datasource/pull/123)
+
 ## 13.0.4
 
 - Bump frontend dependency `brace-expansion` to address CVE-2026-102276 and CVE-2026-102278
