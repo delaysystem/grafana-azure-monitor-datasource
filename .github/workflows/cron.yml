@@ -23,9 +23,9 @@ jobs:
       bench-execute-cmd: npm run e2e:cloud
       # The tenant and client IDs are nested in json_azureCredentials, so they use vault-action path selectors.
       repo-secrets: |
-        DS_INSTANCE_TENANT_ID=azureMonitorAppRegistration:json_azureCredentials.tenantId
-        DS_INSTANCE_CLIENT_ID=azureMonitorAppRegistration:json_azureCredentials.clientId
-        DS_INSTANCE_CLIENT_SECRET=azureMonitorAppRegistration:secure_clientSecret
+        DS_INSTANCE_TENANT_ID=azureMonitorE2E:json_azureCredentials.tenantId
+        DS_INSTANCE_CLIENT_ID=azureMonitorE2E:json_azureCredentials.clientId
+        DS_INSTANCE_CLIENT_SECRET=azureMonitorE2E:secure_clientSecret
 
   notify-slack:
     name: Notify Slack on failure
