@@ -46,6 +46,21 @@ export const exploreUrl = (uid: string, query: Omit<AzureMonitorQuery, 'refId'> 
   return `/explore?orgId=1&schemaVersion=1&panes=${encodeURIComponent(panes)}`;
 };
 
+// Cloud stacks send queries to the query service instead of /api/ds/query.
+export const QUERY_DATA_URL = /\/api\/ds\/query|\/apis\/[^/]+\/v0alpha1\/namespaces\/[^/]+\/query\b/;
+
+/** Fills the app registration fields of the config editor. */
+export const fillClientSecretCredentials = async (
+  page: Page,
+  tenantId: string,
+  clientId: string,
+  clientSecret: string
+) => {
+  await page.getByRole('textbox', { name: 'Tenant ID' }).fill(tenantId);
+  await page.getByRole('textbox', { name: 'Client ID' }).fill(clientId);
+  await page.getByRole('textbox', { name: 'Client Secret' }).fill(clientSecret);
+};
+
 const SUBSCRIPTIONS_URL = /\/resources\/azuremonitor\/subscriptions\b/;
 
 /** Answers the subscriptions resource call with the placeholder subscription, or with an ARM error. */

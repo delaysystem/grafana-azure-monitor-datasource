@@ -6,19 +6,14 @@ import { components } from '../../src/e2e/selectors';
 import type { AzureMonitorQuery } from '../../src/types/query';
 
 import {
-  LIVE_CREDENTIALS_SKIP_REASON,
   PLACEHOLDER_DATA_SOURCE,
   PLACEHOLDER_SUBSCRIPTION,
-  PLUGIN_TYPE,
+  QUERY_DATA_URL,
   exploreUrl,
   mockSubscriptions,
-  readLiveCredentials,
 } from './helpers';
 
 const { queryEditor } = components;
-
-// Cloud stacks send queries to the query service instead of /api/ds/query.
-const QUERY_DATA_URL = /\/api\/ds\/query|\/apis\/[^/]+\/v0alpha1\/namespaces\/[^/]+\/query\b/;
 
 const KQL_QUERY = 'AzureActivity | take 10';
 const ARG_QUERY = 'Resources | project name, type | limit 5';
@@ -48,34 +43,7 @@ const ARG_FRAME_RESPONSE = {
   },
 };
 
-interface QueryDataBody {
-  results?: Record<string, { frames?: Array<{ data?: { values?: unknown[][] } }> }>;
-}
-
-const isQueryDataBody = (value: unknown): value is QueryDataBody =>
-  typeof value === 'object' && value !== null && 'results' in value;
-
 const serviceSelect = (page: Page) => page.getByTestId(queryEditor.header.select).getByRole('combobox');
-
-// Reads the body inside the predicate, because Chrome can evict the response buffer once the promise resolves.
-const waitForFrames = async (page: Page): Promise<QueryDataBody> => {
-  const captured: { body?: QueryDataBody } = {};
-  await page.waitForResponse(async (response) => {
-    if (!QUERY_DATA_URL.test(response.url()) || !response.ok()) {
-      return false;
-    }
-    const body: unknown = await response.json().catch(() => undefined);
-    if (!isQueryDataBody(body) || !body.results?.A?.frames?.length) {
-      return false;
-    }
-    captured.body = body;
-    return true;
-  });
-  if (!captured.body) {
-    throw new Error('Query response matched without a body');
-  }
-  return captured.body;
-};
 
 test.describe('Query editor', () => {
   let uid: string;
@@ -215,48 +183,5 @@ test.describe('Query editor', () => {
 
       await expect(page.getByText('mocked resource graph failure')).toBeVisible();
     });
-  });
-});
-
-test.describe('Query editor with live data', () => {
-  test.describe.configure({ mode: 'serial' });
-  const credentials = readLiveCredentials();
-  test.skip(!credentials, LIVE_CREDENTIALS_SKIP_REASON);
-
-  let uid: string | undefined;
-
-  test.beforeEach(async ({ createDataSource }) => {
-    ({ uid } = await createDataSource({
-      type: PLUGIN_TYPE,
-      jsonData: {
-        azureCredentials: {
-          authType: 'clientsecret',
-          azureCloud: 'AzureCloud',
-          tenantId: credentials?.tenantId,
-          clientId: credentials?.clientId,
-        },
-      },
-      secureJsonData: { clientSecret: credentials?.clientSecret },
-    }));
-  });
-
-  test.afterEach(async ({ grafanaAPIClient }) => {
-    if (uid) {
-      await grafanaAPIClient.deleteDataSourceByUID(uid);
-      uid = undefined;
-    }
-  });
-
-  test('Azure Resource Graph: counts the resources in the first subscription', async ({ page }) => {
-    const bodyPromise = waitForFrames(page);
-    await page.goto(
-      exploreUrl(uid ?? '', {
-        queryType: AzureQueryType.AzureResourceGraph,
-        azureResourceGraph: { query: 'Resources | summarize count()', resultFormat: ResultFormat.Table },
-      })
-    );
-
-    const body = await bodyPromise;
-    expect(body.results?.A?.frames?.[0]?.data?.values?.[0]?.[0]).toBeGreaterThan(0);
   });
 });

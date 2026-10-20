@@ -1,28 +1,20 @@
 import { expect, test } from '@grafana/plugin-e2e';
-import { type Page } from '@playwright/test';
 
 import { components } from '../../src/e2e/selectors';
 import type { AzureMonitorDataSourceJsonData, AzureMonitorDataSourceSecureJsonData } from '../../src/types/types';
 
 import {
-  LIVE_CREDENTIALS_SKIP_REASON,
   PLACEHOLDER_CLIENT_ID,
   PLACEHOLDER_SUBSCRIPTION,
   PLACEHOLDER_TENANT_ID,
   PLUGIN_TYPE,
   PROVISIONED_FILE,
+  fillClientSecretCredentials,
   isCloudRun,
   mockSubscriptions,
-  readLiveCredentials,
 } from './helpers';
 
 const { configEditor } = components;
-
-const fillClientSecretCredentials = async (page: Page, tenantId: string, clientId: string, clientSecret: string) => {
-  await page.getByRole('textbox', { name: 'Tenant ID' }).fill(tenantId);
-  await page.getByRole('textbox', { name: 'Client ID' }).fill(clientId);
-  await page.getByRole('textbox', { name: 'Client Secret' }).fill(clientSecret);
-};
 
 test.describe('Config editor', () => {
   test.describe('rendering', () => {
@@ -141,27 +133,6 @@ test.describe('Config editor', () => {
   });
 
   test.describe('save & test', () => {
-    test.describe('with live credentials', () => {
-      const credentials = readLiveCredentials();
-      test.skip(!credentials, LIVE_CREDENTIALS_SKIP_REASON);
-
-      test('should pass the health check', async ({ createDataSourceConfigPage, page }) => {
-        const configPage = await createDataSourceConfigPage({ type: PLUGIN_TYPE });
-        await fillClientSecretCredentials(
-          page,
-          credentials?.tenantId ?? '',
-          credentials?.clientId ?? '',
-          credentials?.clientSecret ?? ''
-        );
-
-        const response = await configPage.saveAndTest();
-        expect(response.ok()).toBe(true);
-        await expect(configPage).toHaveAlert('success', {
-          hasText: 'Successfully connected to all Azure Monitor endpoints.',
-        });
-      });
-    });
-
     test('should show an error alert when the health check fails', async ({ createDataSourceConfigPage, page }) => {
       const configPage = await createDataSourceConfigPage({ type: PLUGIN_TYPE });
       await fillClientSecretCredentials(
