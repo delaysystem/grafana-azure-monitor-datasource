@@ -122,10 +122,12 @@ const { configEditor, queryEditor, variableEditor } = components;
 
 const DATA_SOURCE_NAME = `Azure Monitor E2E Tests - ${crypto.randomUUID()}`;
 const ROOT_SUBSCRIPTION = 'grafanalabs-datasources-dev';
-const RESOURCE_GROUP = 'cloud-plugins-e2e-test-azmon';
-const STORAGE_ACCOUNT = 'azmonteststorage';
-const LOG_ANALYTICS_WORKSPACE = 'az-mon-test-logs';
-const APPLICATION_INSIGHTS = 'az-mon-test-ai-a';
+// The infra/data-sources Pulumi stack in grafana/data-sources manages these resources.
+const RESOURCE_GROUP = 'datasources-instance-rg';
+const REGION = 'east us 2';
+const STORAGE_ACCOUNT = 'datasourcesazmone2e';
+const LOG_ANALYTICS_WORKSPACE = 'datasources-log-analytics';
+const APPLICATION_INSIGHTS = 'datasources-app-insights';
 
 interface VariableOptions {
   subscription?: string;
@@ -366,7 +368,7 @@ test.describe('Azure Monitor datasource', () => {
       .click();
     await setVariableValue(dashboardPage, selectors, 'resourceGroups', RESOURCE_GROUP);
     await setVariableValue(dashboardPage, selectors, 'namespaces', 'microsoft.storage/storageaccounts');
-    await setVariableValue(dashboardPage, selectors, 'region', 'uk west');
+    await setVariableValue(dashboardPage, selectors, 'region', REGION);
     await setVariableValue(dashboardPage, selectors, 'resource', STORAGE_ACCOUNT);
 
     const panel = await dashboardPage.addPanel();
