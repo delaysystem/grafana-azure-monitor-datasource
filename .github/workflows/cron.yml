@@ -1,0 +1,49 @@
+name: Scheduled Cloud end-to-end tests
+
+on:
+  schedule:
+    - cron: '0 9 * * *' # Daily at 09:00 UTC
+  workflow_dispatch:
+
+# A reusable workflow can only narrow caller permissions, and the Vault step
+# needs the OIDC token.
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  playwright-cloud:
+    uses: grafana/data-sources-ci-workflows/.github/workflows/playwright-cloud.yml@main
+    secrets: inherit
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      run-stage: nightly
+      bench-execute-cmd: npm run e2e:cloud
+      # The tenant and client IDs are nested in json_azureCredentials, so they use vault-action path selectors.
+      repo-secrets: |
+        DS_INSTANCE_TENANT_ID=azureMonitorAppRegistration:json_azureCredentials.tenantId
+        DS_INSTANCE_CLIENT_ID=azureMonitorAppRegistration:json_azureCredentials.clientId
+        DS_INSTANCE_CLIENT_SECRET=azureMonitorAppRegistration:secure_clientSecret
+
+  notify-slack:
+    name: Notify Slack on failure
+    needs: playwright-cloud
+    if: failure()
+    runs-on: ubuntu-24.04
+    # The action posts to Slack through OIDC, so the job needs id-token: write.
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Notify Slack on failure
+        uses: grafana/data-sources-ci-workflows/.github/actions/notify-cloud-e2e-failure@main
+        with:
+          repo: ${{ github.repository }}
+          run-stage: nightly
+          ref-name: ${{ github.ref_name }}
+          actor: ${{ github.actor }}
+          event-name: ${{ github.event_name }}
+          sha: ${{ github.sha }}
+          run-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

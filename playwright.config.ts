@@ -4,6 +4,9 @@ import { dirname } from 'node:path';
 
 const pluginE2eAuth = `${dirname(require.resolve('@grafana/plugin-e2e'))}/auth`;
 
+// A Cloud page loads its settings and the plugin module asynchronously, so it needs larger budgets.
+const isCloudRun = !!process.env.GRAFANA_URL;
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -14,9 +17,13 @@ const pluginE2eAuth = `${dirname(require.resolve('@grafana/plugin-e2e'))}/auth`;
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig<PluginOptions>({
-  testDir: './tests',
+  testDir: './tests/e2e',
+  timeout: isCloudRun ? 90_000 : 30_000,
+  expect: { timeout: isCloudRun ? 20_000 : 5_000 },
   /* Run tests in files in parallel */
   fullyParallel: true,
+  // Each worker boots Grafana and the plugin bundle, so more workers starve the pages and time out first renders.
+  workers: '25%',
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -45,7 +52,7 @@ export default defineConfig<PluginOptions>({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/admin.json',
+        storageState: `playwright/.auth/${process.env.GRAFANA_ADMIN_USER || 'admin'}.json`,
       },
       dependencies: ['auth'],
     },

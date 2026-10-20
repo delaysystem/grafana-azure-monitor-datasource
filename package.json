@@ -10,6 +10,7 @@
     "lint": "eslint --cache .",
     "lint:fix": "npm run lint -- --fix && prettier --write --list-different .",
     "e2e": "playwright test",
+    "e2e:cloud": "playwright test --grep-invert @quarantine",
     "server": "docker compose up --build",
     "sign": "npx --yes @grafana/sign-plugin@latest",
     "i18n-extract": "i18next-cli extract --sync-primary"
@@ -20,7 +21,7 @@
     "@grafana/eslint-config": "9.0.0",
     "@grafana/plugin-e2e": "3.9.0",
     "@grafana/tsconfig": "2.1.0",
-    "@playwright/test": "1.60.0",
+    "@playwright/test": "1.64.0",
     "@stylistic/eslint-plugin-ts": "4.4.0",
     "@swc/core": "1.15.40",
     "@swc/helpers": "0.5.21",

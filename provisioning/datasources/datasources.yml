@@ -2,13 +2,20 @@ apiVersion: 1
 
 datasources:
   - name: 'Azure Monitor'
+    uid: 'azure-monitor-e2e'
     type: 'grafana-azure-monitor-datasource'
     access: proxy
     isDefault: false
     orgId: 1
     version: 1
     editable: true
+    # The config and query editors render against these placeholder IDs, but Azure rejects them.
     jsonData:
-      path: '/resources'
+      azureCredentials:
+        authType: 'clientsecret'
+        azureCloud: 'AzureCloud'
+        tenantId: '00000000-0000-0000-0000-000000000001'
+        clientId: '00000000-0000-0000-0000-000000000002'
+      subscriptionId: '00000000-0000-0000-0000-000000000003'
     secureJsonData:
-      apiKey: 'api-key'
+      clientSecret: 'placeholder-client-secret'
