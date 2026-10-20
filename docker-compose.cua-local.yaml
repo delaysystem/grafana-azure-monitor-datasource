@@ -72,6 +72,10 @@ configs:
       allow_sign_up = true
       skip_org_role_sync = true
 
+      [feature_toggles]
+      # Shows the batch metrics toggle in the config editor (the frontend reads this flag over OFREP).
+      datasources.azureMonitorBatchAPI = ${AZURE_MONITOR_BATCH_API_FLAG_OVERRIDE:-true}
+
       [users]
       # Local-only instance: make the Entra user an Admin so they can add data sources.
       auto_assign_org_role = Admin
