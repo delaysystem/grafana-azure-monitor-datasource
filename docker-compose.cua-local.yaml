@@ -1,0 +1,73 @@
+# Local Grafana for reproducing and fixing Azure Monitor current-user (CUA) auth issues,
+# e.g. https://github.com/grafana/grafana-azure-monitor-datasource/issues/119.
+#
+# Runs the plugin built into ./dist as an *external* plugin in place of the core one, so plugin changes need
+# no Grafana rebuild. Users sign in through an Entra app registration that you create for yourself:
+#   - Web redirect URI http://localhost:3000/login/azuread, plus a client secret
+#   - Delegated API permissions: Azure Service Management user_impersonation, Log Analytics API Data.Read
+#   - Authentication > Implicit grant and hybrid flows: "ID tokens" ticked = CUA works today,
+#     unticked = AADSTS240002 (the failure in #119). "Access tokens" makes no difference.
+#
+# Build, then start (keep the client ID and secret in a password manager, never in a file):
+#   npm run build && mage -v build:linuxARM64
+#   AZ_CLIENT_ID=... AZ_CLIENT_SECRET=... docker compose -f docker-compose.cua-local.yaml up -d
+# e.g. AZ_CLIENT_SECRET="$(op read 'op://<vault>/<item id>/credential')". AZ_TENANT_ID defaults to Grafana Labs.
+#
+# Then sign in with "Azure Entra Login" and add an Azure Monitor data source with Current User auth through the
+# UI (the UI sets jsonData.oauthPassThru, without which Grafana never forwards the user's tokens to the plugin).
+#
+# After a frontend change: `npm run dev` rebuilds ./dist on save - just reload the browser.
+# After a backend change: `mage -v build:linuxARM64` then `docker compose -f docker-compose.cua-local.yaml restart`.
+# After changing the app registration: restart, then sign out and back in to get fresh tokens.
+
+services:
+  grafana:
+    image: grafana/grafana:${GRAFANA_VERSION:-latest}
+    container_name: grafana-cua-local
+    ports:
+      - 3000:3000
+    volumes:
+      - ./dist:/var/lib/grafana/plugins/grafana-azure-monitor-datasource
+      - grafana-cua-local:/var/lib/grafana
+    configs:
+      - source: grafana_ini
+        target: /etc/grafana/grafana.ini
+    environment:
+      GF_SERVER_ROOT_URL: http://localhost:3000
+      GF_LOG_LEVEL: info
+      GF_LOG_FILTERS: plugin.grafana-azure-monitor-datasource:debug
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: grafana-azure-monitor-datasource
+      GF_FEATURE_TOGGLES_splashScreen: 'false'
+      GF_AUTH_AZUREAD_CLIENT_ID: ${AZ_CLIENT_ID:?set AZ_CLIENT_ID to your app registration's client ID}
+      GF_AUTH_AZUREAD_CLIENT_SECRET: ${AZ_CLIENT_SECRET:?set AZ_CLIENT_SECRET to your app registration's secret}
+
+volumes:
+  grafana-cua-local:
+
+configs:
+  grafana_ini:
+    content: |
+      [plugin.grafana-azure-monitor-datasource]
+      # Load ./dist instead of the core plugin with the same id.
+      as_external = true
+
+      [auth.azuread]
+      enabled = true
+      name = Azure Entra Login
+      # Append ?prompt=consent to force the consent screen after adding a permission to the app registration.
+      auth_url = https://login.microsoftonline.com/${AZ_TENANT_ID:-39307a09-1fd5-481d-88d7-854919f289fd}/oauth2/v2.0/authorize
+      token_url = https://login.microsoftonline.com/${AZ_TENANT_ID:-39307a09-1fd5-481d-88d7-854919f289fd}/oauth2/v2.0/token
+      # .default makes sign-in consent to every permission on the app registration. Without it the
+      # on-behalf-of exchange fails with AADSTS65001 (consent_required).
+      scopes = .default openid email profile
+      use_pkce = true
+      allow_sign_up = true
+      skip_org_role_sync = true
+
+      [users]
+      # Local-only instance: make the Entra user an Admin so they can add data sources.
+      auto_assign_org_role = Admin
+
+      [azure]
+      # Without this the plugin rejects current-user auth outright.
+      user_identity_enabled = true
