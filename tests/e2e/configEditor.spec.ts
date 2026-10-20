@@ -9,6 +9,7 @@ import {
   PLACEHOLDER_TENANT_ID,
   PLUGIN_TYPE,
   PROVISIONED_FILE,
+  VERSION_CONFLICT_FAIL_REASON,
   fillClientSecretCredentials,
   isCloudRun,
   mockSubscriptions,
@@ -162,6 +163,33 @@ test.describe('Config editor', () => {
       const response = await configPage.saveAndTest();
       expect(response.ok()).toBe(false);
       await expect(configPage).toHaveAlert('error', { hasText: 'One or more health checks failed' });
+    });
+
+    test('should save after Load Subscriptions selects the first subscription', async ({
+      createDataSourceConfigPage,
+      page,
+    }) => {
+      test.fail(true, VERSION_CONFLICT_FAIL_REASON);
+      await mockSubscriptions(page);
+      const configPage = await createDataSourceConfigPage({ type: PLUGIN_TYPE });
+      await fillClientSecretCredentials(
+        page,
+        PLACEHOLDER_TENANT_ID,
+        PLACEHOLDER_CLIENT_ID,
+        'placeholder-client-secret'
+      );
+      await page.getByRole('button', { name: 'Load Subscriptions' }).click();
+      await expect(page.getByTestId(configEditor.defaultSubscription.input)).toContainText(
+        PLACEHOLDER_SUBSCRIPTION.displayName
+      );
+      await configPage.mockHealthCheckResponse({ status: 'OK', message: 'mocked health check success' });
+
+      const saveResponse = page.waitForResponse(
+        (response) => response.request().method() === 'PUT' && /\/api\/datasources\/uid\//.test(response.url())
+      );
+      await page.getByRole('button', { name: 'Save & test' }).click();
+      expect((await saveResponse).status()).toBe(200);
+      await expect(configPage).toHaveAlert('success', { hasText: 'mocked health check success' });
     });
   });
 });

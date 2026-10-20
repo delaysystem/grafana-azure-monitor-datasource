@@ -83,6 +83,10 @@ export interface LiveCredentials {
 export const LIVE_CREDENTIALS_SKIP_REASON =
   'Requires DS_INSTANCE_TENANT_ID, DS_INSTANCE_CLIENT_ID and DS_INSTANCE_CLIENT_SECRET';
 
+export const VERSION_CONFLICT_FAIL_REASON =
+  'Save & test after Load Subscriptions fails with a version conflict until ' +
+  'https://github.com/grafana/grafana-azure-monitor-datasource/pull/137 merges';
+
 /** Returns the app registration that the Cloud cron workflow injects, or undefined when any part is unset. */
 export const readLiveCredentials = (): LiveCredentials | undefined => {
   const tenantId = process.env.DS_INSTANCE_TENANT_ID;
