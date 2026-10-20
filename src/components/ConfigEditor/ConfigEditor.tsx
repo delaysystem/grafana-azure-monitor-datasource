@@ -1,11 +1,7 @@
 import { OpenFeatureProvider } from '@openfeature/react-sdk';
-import { memo, useEffect, useState, type ChangeEvent } from 'react';
+import { memo, useEffect, useRef, useState, type ChangeEvent } from 'react';
 
-import {
-  type DataSourcePluginOptionsEditorProps,
-  type SelectableValue,
-  updateDatasourcePluginOption,
-} from '@grafana/data';
+import { type DataSourcePluginOptionsEditorProps, type SelectableValue } from '@grafana/data';
 import { t } from '@grafana/i18n';
 import { ConfigSection, ConfigSubSection, DataSourceDescription } from '@grafana/plugin-ui';
 import { getBackendSrv, isFetchError, config } from '@grafana/runtime';
@@ -42,6 +38,17 @@ export const ConfigEditor = memo(function ConfigEditor(props: Props) {
 
   const baseURL = `/api/datasources/uid/${options.uid}/resources/${routeNames.azureMonitor}/subscriptions`;
 
+  // onOptionsChange reaches props.options only on the next render, so callbacks from an earlier render read this ref.
+  const latestOptions = useRef(options);
+  useEffect(() => {
+    latestOptions.current = options;
+  }, [options]);
+
+  function applyOptions(next: AzureMonitorDataSourceSettings): void {
+    latestOptions.current = next;
+    onOptionsChange(next);
+  }
+
   // One-time migration: if this datasource still has the
   // deprecated shared `timeout`, copy it into any per-service field that
   // isn't already explicitly set, drop `timeout`, and save immediately - no
@@ -66,7 +73,7 @@ export const ConfigEditor = memo(function ConfigEditor(props: Props) {
       },
     };
 
-    onOptionsChange(migrated);
+    applyOptions(migrated);
     saveOptions(migrated, true).catch(() => setUnsaved(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -74,17 +81,19 @@ export const ConfigEditor = memo(function ConfigEditor(props: Props) {
   function updateOptions(
     optionsFunc: (options: AzureMonitorDataSourceSettings) => AzureMonitorDataSourceSettings
   ): void {
-    const updated = optionsFunc(options);
-    onOptionsChange(updated);
+    applyOptions(optionsFunc(latestOptions.current));
     setUnsaved(true);
   }
 
-  async function saveOptions(targetOptions: AzureMonitorDataSourceSettings = options, force = false): Promise<void> {
+  async function saveOptions(
+    targetOptions: AzureMonitorDataSourceSettings = latestOptions.current,
+    force = false
+  ): Promise<void> {
     if (unsaved || force) {
       await getBackendSrv()
         .put(`/api/datasources/uid/${targetOptions.uid}`, targetOptions)
         .then((result: { datasource: AzureMonitorDataSourceSettings }) => {
-          updateDatasourcePluginOption(props, 'version', result.datasource.version);
+          applyOptions({ ...latestOptions.current, version: result.datasource.version });
         });
 
       setUnsaved(false);
