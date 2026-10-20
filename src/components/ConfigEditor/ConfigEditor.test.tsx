@@ -1,6 +1,10 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { useState } from 'react';
+import { of } from 'rxjs';
 
 import { getBackendSrv } from '@grafana/runtime';
+
+import { type AzureMonitorDataSourceSettings } from '../../types/types';
 
 import { ConfigEditor } from './ConfigEditor';
 
@@ -190,5 +194,43 @@ describe('AppInsights ConfigEditor', () => {
 
     expect(screen.getByText('cookie1')).toBeInTheDocument();
     expect(screen.getByText('cookie2')).toBeInTheDocument();
+  });
+
+  it('should keep the saved version when loading subscriptions selects the first one', async () => {
+    const fetchMock = jest
+      .fn()
+      .mockReturnValue(of({ data: { value: [{ subscriptionId: 'sub-1', displayName: 'Subscription 1' }] } }));
+    (getBackendSrv as jest.Mock).mockReturnValue({ put: putMock, fetch: fetchMock });
+    const StatefulConfigEditor = () => {
+      const [options, setOptions] = useState<AzureMonitorDataSourceSettings>({
+        ...baseOptions,
+        jsonData: {
+          azureCredentials: {
+            authType: 'clientsecret',
+            azureCloud: 'AzureCloud',
+            tenantId: 'tenant',
+            clientId: 'client',
+          },
+        },
+        secureJsonData: { azureClientSecret: 'secret' },
+      });
+      const onChange = (next: AzureMonitorDataSourceSettings) => {
+        onOptionsChange(next);
+        setOptions(next);
+      };
+      return <ConfigEditor options={options} onOptionsChange={onChange} />;
+    };
+    render(<StatefulConfigEditor />);
+
+    fireEvent.change(screen.getByLabelText('Client ID'), { target: { value: 'client-2' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Load Subscriptions' }));
+
+    await waitFor(() =>
+      expect(onOptionsChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ jsonData: expect.objectContaining({ subscriptionId: 'sub-1' }) })
+      )
+    );
+    expect(putMock).toHaveBeenCalledTimes(1);
+    expect(onOptionsChange).toHaveBeenLastCalledWith(expect.objectContaining({ version: 2 }));
   });
 });
