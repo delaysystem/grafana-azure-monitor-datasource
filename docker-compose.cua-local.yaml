@@ -9,7 +9,7 @@
 #     unticked = AADSTS240002 (the failure in #119). "Access tokens" makes no difference.
 #
 # Build, then start (keep the client ID and secret in a password manager, never in a file):
-#   npm run build && mage -v build:linuxARM64
+#   npm run build && mage -v
 #   AZ_CLIENT_ID=... AZ_CLIENT_SECRET=... docker compose -f docker-compose.cua-local.yaml up -d
 # e.g. AZ_CLIENT_SECRET="$(op read 'op://<vault>/<item id>/credential')". AZ_TENANT_ID defaults to Grafana Labs.
 #
@@ -17,7 +17,7 @@
 # UI (the UI sets jsonData.oauthPassThru, without which Grafana never forwards the user's tokens to the plugin).
 #
 # After a frontend change: `npm run dev` rebuilds ./dist on save - just reload the browser.
-# After a backend change: `mage -v build:linuxARM64` then `docker compose -f docker-compose.cua-local.yaml restart`.
+# After a backend change: `mage -v` then `docker compose -f docker-compose.cua-local.yaml restart`.
 # After changing the app registration: restart, then sign out and back in to get fresh tokens.
 
 services:
@@ -50,6 +50,11 @@ configs:
       [plugin.grafana-azure-monitor-datasource]
       # Load ./dist instead of the core plugin with the same id.
       as_external = true
+      # Settings here reach the plugin as GF_PLUGIN_<KEY>; Grafana doesn't forward its other env vars to plugins.
+      # Phase 0 only: force the on-behalf-of assertion ("idtoken" or "accesstoken"); empty = choose by audience.
+      azure_obo_assertion_override = ${AZURE_OBO_ASSERTION_OVERRIDE:-}
+      # Local testing only: the standalone plugin has no OpenFeature provider, so force datasources.azureMonitorBatchAPI.
+      azure_monitor_batch_api_flag_override = ${AZURE_MONITOR_BATCH_API_FLAG_OVERRIDE:-true}
 
       [auth.azuread]
       enabled = true
@@ -59,7 +64,10 @@ configs:
       token_url = https://login.microsoftonline.com/${AZ_TENANT_ID:-39307a09-1fd5-481d-88d7-854919f289fd}/oauth2/v2.0/token
       # .default makes sign-in consent to every permission on the app registration. Without it the
       # on-behalf-of exchange fails with AADSTS65001 (consent_required).
-      scopes = .default openid email profile
+      # Override with AZ_LOGIN_SCOPES to get an access token for this app instead of Graph, so it can be the
+      # on-behalf-of assertion: "<client-id>/.default openid email profile offline_access" (GUID form, not api://).
+      scopes = ${AZ_LOGIN_SCOPES:-.default openid email profile}
+      use_refresh_token = ${AZ_USE_REFRESH_TOKEN:-false}
       use_pkce = true
       allow_sign_up = true
       skip_org_role_sync = true

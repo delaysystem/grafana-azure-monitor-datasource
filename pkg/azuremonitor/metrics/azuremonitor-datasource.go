@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"path"
 	"regexp"
 	"sort"
@@ -101,6 +102,10 @@ const batchAPIFlag = "datasources.azureMonitorBatchAPI"
 // Defaults to off when the flag cannot be evaluated (e.g. the standalone
 // plugin binary has no provider).
 func isBatchFlagEnabled(ctx context.Context) bool {
+	// TEMPORARY, local testing only (CUA Phase 0): the standalone plugin has no OpenFeature provider.
+	if os.Getenv("GF_PLUGIN_AZURE_MONITOR_BATCH_API_FLAG_OVERRIDE") == "true" {
+		return true
+	}
 	return openfeature.NewDefaultClient().Boolean(ctx, batchAPIFlag, false, openfeature.TransactionContext(ctx))
 }
 

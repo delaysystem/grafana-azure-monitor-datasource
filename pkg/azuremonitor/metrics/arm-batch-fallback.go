@@ -276,7 +276,7 @@ func appendFrames(result *backend.QueryDataResponse, frames data.Frames) {
 // that triggered the fallback. Results are written into result by RefID.
 func (e *AzureMonitorDatasource) fallbackBatch(ctx context.Context, br batchResult, originalByRefID map[string]backend.DataQuery, dsInfo types.DatasourceInfo, client *http.Client, armURL, azurePortalURL string, result *backend.QueryDataResponse) {
 	e.Logger.Debug("metrics batch failed with a retryable error; falling back to ARM /batch",
-		"statusCode", br.StatusCode, "numResources", len(br.Batch.ResourceIDs))
+		"statusCode", br.StatusCode, "numResources", len(br.Batch.ResourceIDs), "error", br.Err)
 
 	subRequests, queriesByName, err := e.buildFallbackSubRequests(br.Batch, originalByRefID, dsInfo)
 	if err != nil {
