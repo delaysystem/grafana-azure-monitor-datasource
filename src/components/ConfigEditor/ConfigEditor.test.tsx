@@ -233,4 +233,106 @@ describe('AppInsights ConfigEditor', () => {
     expect(putMock).toHaveBeenCalledTimes(1);
     expect(onOptionsChange).toHaveBeenLastCalledWith(expect.objectContaining({ version: 2 }));
   });
+
+  describe('saving before loading subscriptions', () => {
+    const clientSecretOptions: AzureMonitorDataSourceSettings = {
+      ...baseOptions,
+      jsonData: {
+        azureCredentials: {
+          authType: 'clientsecret',
+          azureCloud: 'AzureCloud',
+          tenantId: 'tenant',
+          clientId: 'client',
+        },
+      },
+      secureJsonData: { azureClientSecret: 'secret' },
+    };
+
+    const StatefulConfigEditor = ({ initial }: { initial: AzureMonitorDataSourceSettings }) => {
+      const [options, setOptions] = useState(initial);
+      const onChange = (next: AzureMonitorDataSourceSettings) => {
+        onOptionsChange(next);
+        setOptions(next);
+      };
+      return <ConfigEditor options={options} onOptionsChange={onChange} />;
+    };
+
+    function deferredPut() {
+      const pending: Array<{ resolve: (value: unknown) => void; reject: (reason: unknown) => void }> = [];
+      putMock.mockImplementation(() => new Promise((resolve, reject) => pending.push({ resolve, reject })));
+      return pending;
+    }
+
+    beforeEach(() => {
+      const fetchMock = jest.fn().mockReturnValue(of({ data: { value: [] } }));
+      (getBackendSrv as jest.Mock).mockReturnValue({ put: putMock, fetch: fetchMock });
+    });
+
+    afterEach(() => {
+      putMock.mockReset();
+      putMock.mockResolvedValue({ datasource: { version: 2 } });
+    });
+
+    it('should not send a second save with the same version while one is in flight', async () => {
+      const pending = deferredPut();
+      render(<StatefulConfigEditor initial={clientSecretOptions} />);
+
+      fireEvent.change(screen.getByLabelText('Client ID'), { target: { value: 'client-2' } });
+      fireEvent.click(screen.getByRole('button', { name: 'Load Subscriptions' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Load Subscriptions' }));
+      await waitFor(() => expect(putMock).toHaveBeenCalled());
+      pending[0].resolve({ datasource: { version: 2 } });
+
+      await waitFor(() => expect(onOptionsChange).toHaveBeenLastCalledWith(expect.objectContaining({ version: 2 })));
+      expect(putMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('should save an edit made while a save was in flight', async () => {
+      const pending = deferredPut();
+      render(<StatefulConfigEditor initial={clientSecretOptions} />);
+
+      fireEvent.change(screen.getByLabelText('Client ID'), { target: { value: 'client-2' } });
+      fireEvent.click(screen.getByRole('button', { name: 'Load Subscriptions' }));
+      await waitFor(() => expect(putMock).toHaveBeenCalled());
+      fireEvent.change(screen.getByLabelText('Client ID'), { target: { value: 'client-3' } });
+      pending[0].resolve({ datasource: { version: 2 } });
+      await waitFor(() => expect(onOptionsChange).toHaveBeenLastCalledWith(expect.objectContaining({ version: 2 })));
+
+      fireEvent.click(screen.getByRole('button', { name: 'Load Subscriptions' }));
+
+      await waitFor(() => expect(putMock).toHaveBeenCalledTimes(2));
+      const [, body] = putMock.mock.calls[1];
+      expect(body.version).toBe(2);
+      expect(body.jsonData.azureCredentials.clientId).toBe('client-3');
+    });
+
+    it('should show an error when the save fails', async () => {
+      putMock.mockRejectedValue({
+        status: 409,
+        data: { message: 'Datasource has already been updated by someone else' },
+      });
+      render(<StatefulConfigEditor initial={clientSecretOptions} />);
+
+      fireEvent.change(screen.getByLabelText('Client ID'), { target: { value: 'client-2' } });
+      fireEvent.click(screen.getByRole('button', { name: 'Load Subscriptions' }));
+
+      expect(await screen.findByText('Error requesting subscriptions')).toBeInTheDocument();
+    });
+
+    it('should keep the credential defaults set on load when migrating the legacy timeout', async () => {
+      render(
+        <StatefulConfigEditor
+          initial={{
+            ...baseOptions,
+            jsonData: { tenantId: 'tenant', clientId: 'client', cloudName: 'azuremonitor', timeout: 10 },
+          }}
+        />
+      );
+
+      await waitFor(() => expect(putMock).toHaveBeenCalledTimes(1));
+      const [, body] = putMock.mock.calls[0];
+      expect(body.jsonData.logsTimeout).toBe(10);
+      expect(body.jsonData.azureCredentials).toEqual(expect.objectContaining({ authType: 'clientsecret' }));
+    });
+  });
 });

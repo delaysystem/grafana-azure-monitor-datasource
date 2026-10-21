@@ -1,5 +1,5 @@
 import { OpenFeatureProvider } from '@openfeature/react-sdk';
-import { memo, useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { memo, useEffect, useState, type ChangeEvent } from 'react';
 
 import { type DataSourcePluginOptionsEditorProps, type SelectableValue } from '@grafana/data';
 import { t } from '@grafana/i18n';
@@ -19,6 +19,7 @@ import {
 import { fetchAllArmPages, routeNames } from '../../utils/common';
 
 import { MonitorConfig } from './MonitorConfig';
+import { useDraftOptions } from './useDraftOptions';
 
 export type Props = DataSourcePluginOptionsEditorProps<
   AzureMonitorDataSourceJsonData,
@@ -33,38 +34,29 @@ interface ErrorMessage {
 
 export const ConfigEditor = memo(function ConfigEditor(props: Props) {
   const { options, onOptionsChange } = props;
-  const [unsaved, setUnsaved] = useState(false);
   const [error, setError] = useState<ErrorMessage | undefined>(undefined);
 
   const baseURL = `/api/datasources/uid/${options.uid}/resources/${routeNames.azureMonitor}/subscriptions`;
 
-  // onOptionsChange reaches props.options only on the next render, so callbacks from an earlier render read this ref.
-  const latestOptions = useRef(options);
-  useEffect(() => {
-    latestOptions.current = options;
-  }, [options]);
-
-  function applyOptions(next: AzureMonitorDataSourceSettings): void {
-    latestOptions.current = next;
-    onOptionsChange(next);
-  }
+  const { latest, update: updateOptions, save: saveOptions } = useDraftOptions(options, onOptionsChange);
 
   // One-time migration: if this datasource still has the
   // deprecated shared `timeout`, copy it into any per-service field that
   // isn't already explicitly set, drop `timeout`, and save immediately - no
   // user action required.
   useEffect(() => {
-    if (options.readOnly) {
+    const current = latest.current;
+    if (current.readOnly) {
       return;
     }
 
-    if (options.jsonData.timeout === undefined) {
+    if (current.jsonData.timeout === undefined) {
       return;
     }
 
-    const { timeout, ...jsonData } = options.jsonData;
+    const { timeout, ...jsonData } = current.jsonData;
     const migrated: AzureMonitorDataSourceSettings = {
-      ...options,
+      ...current,
       jsonData: {
         ...jsonData,
         logsTimeout: jsonData.logsTimeout ?? timeout,
@@ -73,32 +65,11 @@ export const ConfigEditor = memo(function ConfigEditor(props: Props) {
       },
     };
 
-    applyOptions(migrated);
-    saveOptions(migrated, true).catch(() => setUnsaved(true));
+    updateOptions(() => migrated);
+    // A failed save leaves the migration unsaved, so the next save retries it.
+    saveOptions().catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  function updateOptions(
-    optionsFunc: (options: AzureMonitorDataSourceSettings) => AzureMonitorDataSourceSettings
-  ): void {
-    applyOptions(optionsFunc(latestOptions.current));
-    setUnsaved(true);
-  }
-
-  async function saveOptions(
-    targetOptions: AzureMonitorDataSourceSettings = latestOptions.current,
-    force = false
-  ): Promise<void> {
-    if (unsaved || force) {
-      await getBackendSrv()
-        .put(`/api/datasources/uid/${targetOptions.uid}`, targetOptions)
-        .then((result: { datasource: AzureMonitorDataSourceSettings }) => {
-          applyOptions({ ...latestOptions.current, version: result.datasource.version });
-        });
-
-      setUnsaved(false);
-    }
-  }
 
   function onCookiesChange(cookies: string[]): void {
     updateOptions((options) => ({
@@ -126,11 +97,10 @@ export const ConfigEditor = memo(function ConfigEditor(props: Props) {
   }
 
   async function getSubscriptions(): Promise<Array<SelectableValue<string>>> {
-    await saveOptions();
-
     const query = `?api-version=2019-03-01`;
     const resourcePath = `/api/datasources/uid/${options.uid}/resources/${routeNames.azureMonitor}`;
     try {
+      await saveOptions();
       const value = await fetchAllArmPages<Subscription>(resourcePath, baseURL + query, async (path) => {
         const response = await getBackendSrv()
           .fetch<AzureAPIResponse<Subscription>>({ url: path, method: 'GET' })
@@ -287,7 +257,7 @@ export const ConfigEditor = memo(function ConfigEditor(props: Props) {
             </InlineField>
           </ConfigSubSection>
           {config.secureSocksDSProxyEnabled && (
-            <SecureSocksProxySettings options={options} onOptionsChange={onOptionsChange} />
+            <SecureSocksProxySettings options={options} onOptionsChange={(next) => updateOptions(() => next)} />
           )}
         </ConfigSection>
       </>
