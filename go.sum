@@ -120,8 +120,8 @@ github.com/grafana/dsconfig/dsconfig v0.0.7 h1:rh2PhwKLVrokMa2eTbS3zDfSIS8sOl54X
 github.com/grafana/dsconfig/dsconfig v0.0.7/go.mod h1:orwL9W2Ea8Wjubn0Vw1or/uolFDSKSFfc404G2xrvEc=
 github.com/grafana/dsconfig/schema v0.0.12 h1:WQFlKzJtACotG3fcNnU+RcnBMDXxgSAuAphkF2nlyz0=
 github.com/grafana/dsconfig/schema v0.0.12/go.mod h1:kBZ/uoNZw6QjYU/eCS2wdBckerbv7zTWLtgy+9Hm8LQ=
-github.com/grafana/grafana-azure-sdk-go/v2 v2.5.2-0.20261020145305-35120ed4756b h1:Yzvzqb/Rb68kADOVC/IsU6h+lzOfRGwfO7ClquigB9k=
-github.com/grafana/grafana-azure-sdk-go/v2 v2.5.2-0.20261020145305-35120ed4756b/go.mod h1:RHmDfN8D/atOMRq5LZnfo1xzAxirEXKa6xPuoaMPVE8=
+github.com/grafana/grafana-azure-sdk-go/v2 v2.5.2-0.20261020215044-2a5f9da47631 h1:GDtotcd5lM7wWycsVIG3F03ruNM7LhzLSReVjjRJots=
+github.com/grafana/grafana-azure-sdk-go/v2 v2.5.2-0.20261020215044-2a5f9da47631/go.mod h1:RHmDfN8D/atOMRq5LZnfo1xzAxirEXKa6xPuoaMPVE8=
 github.com/grafana/grafana-plugin-sdk-go v0.296.4 h1:3+sYR2lmdb+sIk3m/eA9/lY8sztbhFyGf+6he8nwKuM=
 github.com/grafana/grafana-plugin-sdk-go v0.296.4/go.mod h1:Dza5QLa5L5/0zH6Ce2CZhfTUd6+3FFDhmEHjT0BEBuM=
 github.com/grafana/otel-profiling-go v0.6.0 h1:W7lOZaJj4IJISXMcM1UBk3fJF3tzF2OD6MJBJaQp1H8=
