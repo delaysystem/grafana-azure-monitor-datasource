@@ -201,6 +201,13 @@ describe('AppInsights ConfigEditor', () => {
       .fn()
       .mockReturnValue(of({ data: { value: [{ subscriptionId: 'sub-1', displayName: 'Subscription 1' }] } }));
     (getBackendSrv as jest.Mock).mockReturnValue({ put: putMock, fetch: fetchMock });
+    let resolveSave: (result: { datasource: { version: number } }) => void;
+    putMock.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveSave = resolve;
+        })
+    );
     const StatefulConfigEditor = () => {
       const [options, setOptions] = useState<AzureMonitorDataSourceSettings>({
         ...baseOptions,
@@ -224,13 +231,21 @@ describe('AppInsights ConfigEditor', () => {
 
     fireEvent.change(screen.getByLabelText('Client ID'), { target: { value: 'client-2' } });
     fireEvent.click(screen.getByRole('button', { name: 'Load Subscriptions' }));
+    await waitFor(() => expect(putMock).toHaveBeenCalledTimes(1));
+    fireEvent.change(screen.getByLabelText('Client ID'), { target: { value: 'client-3' } });
+    resolveSave!({ datasource: { version: 2 } });
 
     await waitFor(() =>
       expect(onOptionsChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({ jsonData: expect.objectContaining({ subscriptionId: 'sub-1' }) })
+        expect.objectContaining({
+          version: 2,
+          jsonData: expect.objectContaining({
+            subscriptionId: 'sub-1',
+            azureCredentials: expect.objectContaining({ clientId: 'client-3' }),
+          }),
+        })
       )
     );
     expect(putMock).toHaveBeenCalledTimes(1);
-    expect(onOptionsChange).toHaveBeenLastCalledWith(expect.objectContaining({ version: 2 }));
   });
 });
