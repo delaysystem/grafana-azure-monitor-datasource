@@ -1,3 +1,7 @@
+## 13.0.5
+
+- Bump backend dependency
+
 ## 13.0.4
 
 - Bump frontend dependency `brace-expansion` to address CVE-2026-102276 and CVE-2026-102278
