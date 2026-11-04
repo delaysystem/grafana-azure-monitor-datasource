@@ -53,6 +53,11 @@
       "placeholder-symbol-client-secret": "konfigurálva",
       "reset-symbol-client-secret": "Visszaállítás"
     },
+    "auxiliary-logs-toggle": {
+      "aria-label-enable-auxiliary-logs": "Kiegészítő naplók",
+      "description-auxiliary-logs": "A funkció engedélyezése esetén lekérdezésenkénti Azure Monitor-költségek merülnek fel azon irányítópult-paneleken, amelyek lekérdezik az <2>Kiegészítő naplókhoz</2> konfigurált táblákat. A Kiegészítő naplókra nem vonatkoznak válaszidőre vonatkozó SLA-k, kizárólag eseti lekérdezésekre és adatfeltárásra szolgálnak, és nem használhatók valós idejű adatokat igénylő irányítópultokhoz vagy riasztásokhoz.",
+      "label-enable-auxiliary-logs": "Kiegészítő naplók engedélyezése"
+    },
     "azure-cheat-sheet": {
       "aria-label-raw-query": "{{queryDisplayName}} nyers lekérdezés",
       "aria-label-use-query": "Használja ezt a lekérdezési gombot",
@@ -84,8 +89,26 @@
       "label-enable-batch-api": "Köteg-API engedélyezése"
     },
     "config-editor": {
+      "aria-label-logs-timeout": "",
+      "aria-label-metrics-timeout": "",
+      "aria-label-resource-graph-timeout": "",
       "description-additional-settings": "A további beállítások olyan opcionális beállítások, amelyek konfigurálhatók az adatforrás nagyobb mértékű ellenőrzése érdekében. Idetartozik a Secure Socks Proxy, a lekérdezési időtúllépés és a továbbított cookie-k.",
-      "title-additional-settings": "További beállítások"
+      "description-advanced-http-settings-logs": "",
+      "description-advanced-http-settings-metrics": "",
+      "label-allowed-cookies": "",
+      "label-logs-timeout": "",
+      "label-metrics-timeout": "",
+      "label-resource-graph-timeout": "",
+      "placeholder-logs-timeout": "",
+      "placeholder-metrics-timeout": "",
+      "placeholder-new-cookie": "",
+      "placeholder-resource-graph-timeout": "",
+      "title-additional-settings": "További beállítások",
+      "title-advanced-http-settings": "",
+      "tooltip-allowed-cookies": "",
+      "tooltip-logs-timeout": "",
+      "tooltip-metrics-timeout": "",
+      "tooltip-resource-graph-timeout": ""
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "Az alapértelmezett hitelesítő adatok le lettek tiltva. Mivel a felhasználóalapú hitelesítés eredendően csak a hatókörben felhasználót tartalmazó kéréseket támogatja, az olyan funkciók, mint a riasztás, a rögzített lekérdezések vagy a jelentéskészítés nem fognak az elvárt módon működni. További részletekért tekintse át a <2>dokumentációt</2>.",
@@ -182,19 +205,47 @@
       "tooltip-limit": "A visszaadott sorok számának korlátozása (az alapértelmezett érték az 1000)."
     },
     "logs-management": {
+      "body-auxiliary-logs-queries": "Biztosan átvált a Kiegészítő naplókra?",
       "body-basic-logs-queries": "Biztosan átvált az alapvető naplókra?",
       "confirmText-confirm": "Megerősítés",
+      "description-auxiliary-logs-queries": "A Kiegészítő naplók lekérdezései a beolvasott adatok mennyiségétől függően költséget eredményeznek. A Kiegészítő naplók nem rendelkeznek válaszidőre vonatkozó SLA-kkal, és nem használhatók valós idejű adatokat igénylő irányítópultokhoz vagy riasztásokhoz.",
       "description-basic-logs-queries": "Az Alapvető naplók lekérdezései a beolvasott adatok mennyiségétől függően költséget eredményeznek.",
+      "label-analytics": "Analitika",
+      "label-auxiliary": "Kiegészítő",
+      "label-basic": "Alapvető",
       "label-logs": "Naplók",
+      "title-auxiliary-logs-queries": "Kiegészítő naplók lekérdezései",
       "title-basic-logs-queries": "Alapvető naplók lekérdezései",
-      "tooltip-logs": "Megadja, hogy Alapvető vagy Analitikai naplók lekérdezését kell-e futtatni."
+      "tooltip-logs": "Megadja, hogy Alapvető vagy Analitikai naplók lekérdezését kell-e futtatni.",
+      "tooltip-logs-all": "Megadja, hogy Analitikai, Alapvető vagy Kiegészítő naplók lekérdezését kell-e futtatni.",
+      "tooltip-logs-aux": "Megadja, hogy Analitikai vagy Kiegészítő naplók lekérdezését kell-e futtatni."
     },
     "logs-query-builder": {
       "title-no-tables": "Az erőforrás sikeresen betöltődött, de táblák nélkül"
     },
     "logs-query-editor": {
       "learn-more": "További információ",
-      "view-query": "Lekérdezés megtekintése az Azure Portalon"
+      "notice-auxiliary-single-resource": "A Kiegészítő naplók használatakor egyszerre csak egy erőforrást választhat ki.",
+      "notice-basic-single-resource": "Az Alapvető naplók használata esetén egyszerre csak egy erőforrást választhat ki.",
+      "notice-same-resource-type": "Csak azonos erőforrástípusú elemeket választhat ki.",
+      "tier-switch-body-analytics": "A(z) <0>{{tableName}}</0> egy analitikai táblázat.",
+      "tier-switch-body-auxiliary": "A(z) <0>{{tableName}}</0> egy kiegészítő naplós táblázat – beolvasott GiB-onként költséget eredményez, nincs válaszidőre vonatkozó SLA-ja, és nem megfelelős valós idejű vagy riasztási forgatókönyvekhez.",
+      "tier-switch-body-basic": "A(z) <0>{{tableName}}</0> egy Alapvető naplós táblázat – beolvasott GiB-onként költséget eredményez.",
+      "tier-switch-revert": "Visszaállítás erre: {{fromTier}}",
+      "tier-switch-title": "Lekérdezési szint beállítva erre: {{toTier}}",
+      "view-query": "Lekérdezés megtekintése az Azure Portalon",
+      "warning-auxiliary-data-ingested": "Ez a Kiegészítő naplós lekérdezés {{dataIngested}} GiB feldolgozását végzi futtatáskor. A Kiegészítő naplók nem rendelkeznek válaszidőre vonatkozó SLA-val, és nem megfelelők valós idejű vagy riasztási forgatókönyvekhez. ",
+      "warning-auxiliary-raw": "Ez egy Kiegészítő naplós lekérdezés – a keresési végpontot használja, beolvasott GiB-onként költséget eredményez, nincs válaszidőre vonatkozó SLA-ja, és nem megfelelős valós idejű vagy riasztási forgatókönyvekhez. Az analitikai tervek táblái ebben a módban nem kérdezhetők le (ezekhez használja az Analitika szintet). ",
+      "warning-basic-raw": "Ez egy Alapvető naplós lekérdezés – a keresési végpontot használja, és beolvasott GiB-onként költséget eredményez. Az analitikai tervek táblái ebben a módban nem kérdezhetők le (ezekhez használja az Analitika szintet). ",
+      "warning-data-ingested": "Ez a Kiegészítő naplós lekérdezés {{dataIngested}} GiB feldolgozását végzi futtatáskor. "
+    },
+    "logs-table-section": {
+      "description-auxiliary-disabled": "Ez a táblázat a Kiegészítő naplók tervben található. A lekérdezéséhez engedélyezze a „Kiegészítő naplók” lehetőséget az adatforrás beállításai között.",
+      "description-auxiliary-enabled": "A táblázat kiválasztásával a lekérdezési mód Kiegészítő naplókra vált",
+      "description-basic-disabled": "Ez a táblázat az Alapvető naplók tervben található. A lekérdezéséhez engedélyezze az „Alapvető naplók” lehetőséget az adatforrás beállításai között.",
+      "description-basic-enabled": "A táblázat kiválasztásával a lekérdezési mód átvált az Alapvető naplókra",
+      "description-plan-unavailable": "Ez a táblázat nem választható ki, mert a naplótervét nem sikerült meghatározni.",
+      "label-all-columns": "Összes oszlop"
     },
     "metric-name-field": {
       "label-metric": "Metrika"
@@ -323,6 +374,8 @@
     },
     "variable-editor": {
       "aria-label-select-custom-namespace": "Egyedi névtér kiválasztása",
+      "aria-label-select-dimension-name": "Dimenziónév kiválasztása",
+      "aria-label-select-metric-name": "Metrikanév kiválasztása",
       "aria-label-select-namespace": "Névtér kijelölése",
       "aria-label-select-query-type": "Lekérdezéstípus kiválasztása",
       "aria-label-select-region": "Régió kiválasztása",
@@ -330,6 +383,8 @@
       "aria-label-select-resource-group": "Erőforráscsoport kiválasztása",
       "aria-label-select-subscription": "Előfizetés kiválasztása",
       "label-custom-namespace": "Egyedi névtér",
+      "label-dimension-name": "Dimenziónév",
+      "label-metric-name": "Metrikanév",
       "label-namespace": "Névtér",
       "label-query-type": "Lekérdezés típusa",
       "label-region": "Régió",
