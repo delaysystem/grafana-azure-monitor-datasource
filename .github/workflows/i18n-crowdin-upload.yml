@@ -10,8 +10,7 @@ on:
 
 jobs:
   upload-sources-to-crowdin:
-    # Temporarily disabled Sept 22 2026
-    if: false
+    if: github.repository == 'grafana/grafana-azure-monitor-datasource'
     runs-on: ubuntu-x64
     permissions:
       contents: read
