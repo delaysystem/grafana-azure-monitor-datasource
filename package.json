@@ -81,7 +81,7 @@
     "@grafana/runtime": "13.3.0",
     "@grafana/schema": "13.3.0",
     "@grafana/ui": "13.3.0",
-    "@kusto/monaco-kusto": "10.0.22",
+    "@kusto/monaco-kusto": "15.0.2",
     "@openfeature/ofrep-web-provider": "0.4.3",
     "@openfeature/react-sdk": "1.4.1",
     "@openfeature/web-sdk": "1.10.0",
