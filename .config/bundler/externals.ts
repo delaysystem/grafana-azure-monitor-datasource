@@ -15,6 +15,10 @@ export const externals: ExternalsType = [
   'prismjs',
   'slate-plain-serializer',
   '@grafana/slate-react',
+  // Share core's monaco-editor instance for the Kusto language service instead of bundling
+  // our own copy — bundling both pulls in an incompatible monaco-editor peer version and the
+  // Kusto tokenizer/completion provider never attaches to the editor core actually renders.
+  '@kusto/monaco-kusto',
   'react',
   'react/jsx-runtime',
   'react/jsx-dev-runtime',

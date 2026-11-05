@@ -16,17 +16,32 @@ const QueryField = ({ query, onQueryChange, schema }: AzureQueryEditorFieldProps
   const [monaco, setMonaco] = useState<MonacoEditorValues | undefined>();
 
   useEffect(() => {
-    if (!schema || !monaco) {
+    if (!monaco) {
       return;
     }
 
-    const setupEditor = async ({ monaco, editor }: MonacoEditorValues, schema: EngineSchema) => {
+    let cancelled = false;
+
+    const setupEditor = async ({ monaco, editor }: MonacoEditorValues, schema: EngineSchema | undefined) => {
       try {
         const model = editor.getModel();
         if (model) {
           const kustoWorker = await getKustoWorker();
           const kustoMode = await kustoWorker(model?.uri);
-          await kustoMode.setSchema(schema);
+          if (schema) {
+            await kustoMode.setSchema(schema);
+          }
+
+          if (cancelled) {
+            return;
+          }
+
+          // Force a re-tokenize so a pre-loaded query isn't stuck unhighlighted until the next edit.
+          const selections = editor.getSelections();
+          model.setValue(model.getValue());
+          if (selections) {
+            editor.setSelections(selections);
+          }
         }
       } catch (err) {
         console.error(err);
@@ -34,6 +49,11 @@ const QueryField = ({ query, onQueryChange, schema }: AzureQueryEditorFieldProps
     };
 
     setupEditor(monaco, schema).catch((err) => console.error(err));
+
+    // Skip the setValue nudge if we unmount/rerun before setup finishes.
+    return () => {
+      cancelled = true;
+    };
   }, [schema, monaco]);
 
   const handleEditorMount = useCallback((editor: MonacoEditor, monaco: Monaco) => {
