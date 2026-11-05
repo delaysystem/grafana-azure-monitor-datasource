@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/andybalholm/brotli"
+	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/kinds/dataquery"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
-	"github.com/grafana/grafana-azure-monitor-datasource/pkg/azuremonitor/kinds/dataquery"
 )
 
 func AddCustomDataLink(frame data.Frame, dataLink data.DataLink, singleField bool) data.Frame {
@@ -90,6 +90,38 @@ func ParseResultFormat(queryResultFormat *dataquery.ResultFormat, queryType data
 		return dataquery.ResultFormatTable
 	}
 	return ""
+}
+
+// validateAzureResourcePath ensures a user-supplied ARM resource ID is safe to
+// place on an Azure management URL path. Values that omit the leading slash or
+// contain authority/userinfo markers can otherwise change the request host.
+func validateAzureResourcePath(resource string) error {
+	if !strings.HasPrefix(resource, "/subscriptions/") {
+		return backend.DownstreamError(fmt.Errorf("invalid Azure resource path"))
+	}
+	if strings.ContainsAny(resource, "@?\\# \t\n\r") || strings.Contains(resource, "://") {
+		return backend.DownstreamError(fmt.Errorf("invalid Azure resource path"))
+	}
+	for _, segment := range strings.Split(strings.TrimPrefix(resource, "/"), "/") {
+		if segment == "" || segment == "." || segment == ".." {
+			return backend.DownstreamError(fmt.Errorf("invalid Azure resource path"))
+		}
+	}
+	return nil
+}
+
+// traceOperationIDPattern matches ai.operation.id: a string of at most 128 characters
+// that cannot change the correlation URL path or break out of the KQL string it is
+// interpolated into. The telemetry schema does not restrict the character set beyond that.
+var traceOperationIDPattern = regexp.MustCompile(`^[^/?\\#'"@\s]{1,128}$`)
+
+func validateTraceOperationID(operationID string) error {
+	// "." and ".." are not rejected by the pattern, but JoinPath cleans them and
+	// rewrites the correlation path.
+	if operationID == "." || operationID == ".." || !traceOperationIDPattern.MatchString(operationID) {
+		return backend.DownstreamError(fmt.Errorf("invalid operation ID"))
+	}
+	return nil
 }
 
 func getApiURL(resourceOrWorkspace string, isAppInsightsQuery bool, basicLogsQuery bool) string {
