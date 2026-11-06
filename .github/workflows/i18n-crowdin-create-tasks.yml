@@ -2,10 +2,9 @@ name: Crowdin automatic task management
 
 on:
   workflow_dispatch:
-  # TODO: Enable after existing translations have been bulk-imported into Crowdin.
   # once a month on the first day of the month at midnight
-  # schedule:
-  #   - cron: "0 0 1 * *"
+  schedule:
+    - cron: "0 0 1 * *"
 
 jobs:
   create-tasks-in-crowdin:
