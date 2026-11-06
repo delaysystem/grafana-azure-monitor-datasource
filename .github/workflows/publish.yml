@@ -33,8 +33,6 @@ permissions: {}
 jobs:
   cd:
     name: CD
-    # Temporarily disabled Oct 21 2026
-    # if: false
     uses: grafana/plugin-ci-workflows/.github/workflows/cd.yml@ci-cd-workflows/v10.1.0
     permissions:
       contents: write

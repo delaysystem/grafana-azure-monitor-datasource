@@ -19,5 +19,3 @@ jobs:
       golangci-lint-version: '2.15.0'
       plugin-version-suffix: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
       run-playwright: true
-      # temporarily disabled sept 22 2026
-      disable-gcs-upload: true
