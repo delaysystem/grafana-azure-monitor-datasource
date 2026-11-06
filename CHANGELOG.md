@@ -1,3 +1,9 @@
+## 13.0.8
+
+- Keep traces correlation requests on the configured host in [#161](https://github.com/grafana/grafana-azure-monitor-datasource/pull/161)
+- Fix dimension filter values failing with 403 in [#148](https://github.com/grafana/grafana-azure-monitor-datasource/pull/148)
+- Update dependencies
+
 ## 13.0.7
 
 - Fix code editor syntax highlighter
