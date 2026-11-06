@@ -1,5 +1,6 @@
 import {
   type AzureCredentials,
+  type AzureWorkloadIdentityCredentials,
   getDatasourceCredentials,
   getDefaultAzureCloud,
   getClientSecret,
@@ -10,6 +11,16 @@ import { config } from '@grafana/runtime';
 
 import { type AzureMonitorDataSourceInstanceSettings, type AzureMonitorDataSourceSettings } from './types/types';
 
+// The SDK's workload identity credentials only carry the auth type and drop any tenant/client ID on
+// load and save. The backend accepts them in jsonData.azureCredentials, so they are preserved here.
+export type AzureWorkloadIdentityCredentialsWithIds = AzureWorkloadIdentityCredentials & {
+  tenantId?: string;
+  clientId?: string;
+};
+
+export const getWorkloadIdentityInMemoryEnabled = (): boolean =>
+  !!(config.featureToggles as Record<string, boolean | undefined>).workloadIdentityInMemory;
+
 export function getCredentials(
   options: AzureMonitorDataSourceSettings | AzureMonitorDataSourceInstanceSettings
 ): AzureCredentials {
@@ -17,7 +28,9 @@ export function getCredentials(
   // If not found, return the legacy azure monitor credentials if they exist or fallback to default credentials
   const creds = getDatasourceCredentials(options);
   if (creds) {
-    return creds;
+    return creds.authType === 'workloadidentity' && getWorkloadIdentityInMemoryEnabled()
+      ? withWorkloadIdentityIds(creds, options.jsonData.azureCredentials)
+      : creds;
   }
 
   return getLegacyCredentials(options) || getDefaultCredentials();
@@ -27,7 +40,28 @@ export function updateCredentials(
   options: AzureMonitorDataSourceSettings,
   credentials: AzureCredentials
 ): AzureMonitorDataSourceSettings {
-  return updateDatasourceCredentials(options, credentials);
+  const updated = updateDatasourceCredentials(options, credentials);
+  if (credentials.authType !== 'workloadidentity' || !getWorkloadIdentityInMemoryEnabled()) {
+    return updated;
+  }
+
+  const { tenantId, clientId } = credentials as AzureWorkloadIdentityCredentialsWithIds;
+  return {
+    ...updated,
+    jsonData: {
+      ...updated.jsonData,
+      azureCredentials: {
+        ...updated.jsonData.azureCredentials,
+        ...(tenantId && { tenantId }),
+        ...(clientId && { clientId }),
+      } as AzureCredentials,
+    },
+  };
+}
+
+function withWorkloadIdentityIds(credentials: AzureCredentials, saved: unknown): AzureCredentials {
+  const { tenantId, clientId } = (saved ?? {}) as AzureWorkloadIdentityCredentialsWithIds;
+  return { ...credentials, ...(tenantId && { tenantId }), ...(clientId && { clientId }) } as AzureCredentials;
 }
 
 function getLegacyCredentials(

@@ -6,7 +6,7 @@ require (
 	github.com/andybalholm/brotli v1.2.7
 	github.com/google/go-cmp v0.7.0
 	github.com/grafana/dsconfig/schema v0.0.13
-	github.com/grafana/grafana-azure-sdk-go/v2 v2.5.1
+	github.com/grafana/grafana-azure-sdk-go/v2 v2.6.0
 	github.com/grafana/grafana-plugin-sdk-go v0.298.0
 	github.com/magefile/mage v1.17.2
 	github.com/open-feature/go-sdk v1.20.0

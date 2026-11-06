@@ -7,9 +7,11 @@ import { ConfigSection } from '@grafana/plugin-ui';
 import { Field, Select, Stack } from '@grafana/ui';
 
 import { selectors } from '../../e2e/selectors';
+import { type AzureWorkloadIdentityCredentialsWithIds, getWorkloadIdentityInMemoryEnabled } from '../../credentials';
 
 import { AppRegistrationCredentials } from './AppRegistrationCredentials';
 import { CurrentUserFallbackCredentials } from './CurrentUserFallbackCredentials';
+import { WorkloadIdentityCredentials } from './WorkloadIdentityCredentials';
 
 export interface Props {
   managedIdentityEnabled: boolean;
@@ -129,6 +131,13 @@ export const AzureCredentialsForm = (props: Props) => {
           <AppRegistrationCredentials
             credentials={credentials}
             azureCloudOptions={getAzureCloudOptions()}
+            onCredentialsChange={onCredentialsChange}
+            disabled={disabled}
+          />
+        )}
+        {credentials.authType === 'workloadidentity' && getWorkloadIdentityInMemoryEnabled() && (
+          <WorkloadIdentityCredentials
+            credentials={credentials as AzureWorkloadIdentityCredentialsWithIds}
             onCredentialsChange={onCredentialsChange}
             disabled={disabled}
           />

@@ -135,6 +135,7 @@ func NewInstanceSettings(clientProvider *httpclient.Provider, executors map[stri
 			logger.Error("failed to read Azure settings from Grafana", "error", err.Error())
 			return nil, err
 		}
+		applyAssertionService(azureSettings, processEnv)
 
 		credentials, err := azmoncredentials.FromDatasourceData(jsonData, settings.DecryptedSecureJSONData)
 		if err != nil {

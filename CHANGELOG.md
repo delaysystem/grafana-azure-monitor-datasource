@@ -4,6 +4,9 @@
 - Fix dimension filter values failing with 403 in [#148](https://github.com/grafana/grafana-azure-monitor-datasource/pull/148)
 - Update dependencies
 
+## Unreleased
+- Add support for workload identity credentials (tenant and client ID), and backend assertion support when workload in memory is enabled
+
 ## 13.0.7
 
 - Fix code editor syntax highlighter

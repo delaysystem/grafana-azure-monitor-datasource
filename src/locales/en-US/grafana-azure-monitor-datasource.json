@@ -397,6 +397,12 @@
       "placeholder-region": "Optional",
       "placeholder-resource-group": "Optional",
       "title-error-occurred": "An error occurred while requesting metadata from Azure Monitor"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "Client ID",
+      "aria-label-tenant-id": "Tenant ID",
+      "label-client-id": "Application (client) ID",
+      "label-tenant-id": "Directory (tenant) ID"
     }
   }
 }
