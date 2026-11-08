@@ -94,5 +94,5 @@
     "react-use": "17.6.1",
     "rxjs": "7.8.2"
   },
-  "packageManager": "npm@11.17.0"
+  "packageManager": "npm@12.2.2"
 }
