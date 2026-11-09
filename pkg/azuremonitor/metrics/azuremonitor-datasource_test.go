@@ -655,6 +655,12 @@ func TestAzureMonitorParseResponse(t *testing.T) {
 			dframes, err := datasource.parseResponse(azData, tt.mockQuery, "http://ds", "")
 			require.NoError(t, err)
 			require.NotNil(t, dframes)
+
+			testdata.CheckGoldenFrames(t, "../testdata", fmt.Sprintf("%s.%s", tt.responseFile, strings.ReplaceAll(tt.name, " ", "-")), dframes)
+		})
+	}
+}
+
 func TestAzureMonitorParseResponseEmptyAndSparseEdgeMachineMetrics(t *testing.T) {
 	query := &types.AzureMonitorQuery{
 		URL:          "/subscriptions/sub/resourceGroups/rg/providers/Microsoft.AzureStackHCI/edgeMachines/machine/providers/microsoft.insights/metrics",
@@ -705,12 +711,6 @@ func TestAzureMonitorParseResponseEmptyAndSparseEdgeMachineMetrics(t *testing.T)
 			assert.Equal(t, time.Date(2026, 10, 20, 12, i, 0, 0, time.UTC), frames[0].Fields[0].At(i))
 		}
 	})
-}
-
-
-			testdata.CheckGoldenFrames(t, "../testdata", fmt.Sprintf("%s.%s", tt.responseFile, strings.ReplaceAll(tt.name, " ", "-")), dframes)
-		})
-	}
 }
 
 func TestFindClosestAllowIntervalMS(t *testing.T) {
