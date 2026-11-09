@@ -8,6 +8,7 @@ on:
 
 jobs:
   create-tasks-in-crowdin:
+    if: github.repository == 'grafana/grafana-azure-monitor-datasource'
     runs-on: ubuntu-x64
     permissions:
       contents: read

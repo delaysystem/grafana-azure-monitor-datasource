@@ -41,5 +41,6 @@ jobs:
           crowdin_token: ${{ fromJSON(steps.vault-secrets.outputs.secrets).CROWDIN_TOKEN }}
           crowdin_project_id: 60
           pr_labels: 'area/i18n, no-changelog'
+          en_paths: src/locales/en-US/grafana-azure-monitor-datasource.json
           github_board_id: 1085 # Grafana Data Sources project
           github_repo_token: ${{ steps.get-github-app-token.outputs.token }}
