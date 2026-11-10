@@ -89,26 +89,26 @@
       "label-enable-batch-api": "Aktifkan API Batch"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "Timeout Logs dalam detik",
+      "aria-label-metrics-timeout": "Timeout Metrics dalam detik",
+      "aria-label-resource-graph-timeout": "Timeout Resource Graph dalam detik",
       "description-additional-settings": "Pengaturan tambahan adalah pengaturan opsional yang dapat dikonfigurasi agar memiliki kendali lebih besar atas sumber data Anda. Ini termasuk Secure Socks Proxy, batas waktu permintaan, dan cookie yang diteruskan.",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "Kueri Logs dan Traces menggunakan timeout Logs.",
+      "description-advanced-http-settings-metrics": "Metrics dan tautan Portal Azure menggunakan timeout Metrics.",
+      "label-allowed-cookies": "Cookie yang diizinkan",
+      "label-logs-timeout": "Timeout Logs",
+      "label-metrics-timeout": "Timeout Metrics",
+      "label-resource-graph-timeout": "Timeout Resource Graph",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "Cookie baru (tekan enter untuk menambahkan)",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "Pengaturan tambahan",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "Pengaturan HTTP lanjutan",
+      "tooltip-allowed-cookies": "Proxy Grafana menghapus cookie yang diteruskan secara default. Tentukan cookie berdasarkan nama yang harus diteruskan ke sumber data.",
+      "tooltip-logs-timeout": "Request timeout HTTP untuk kueri Logs dan Traces, dalam detik. Default: 180 dtk (3 menit).",
+      "tooltip-metrics-timeout": "Request timeout HTTP untuk kueri Metrics, dalam detik. Juga digunakan saat membuat tautan Azure Portal. Default: 30 dtk",
+      "tooltip-resource-graph-timeout": "Request timeout HTTP untuk kueri Resource Graph, dalam detik. Default: 30 dtk"
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "Kredensial fallback telah dinonaktifkan. Karena autentikasi berbasis pengguna hanya mendukung permintaan dengan pengguna dalam cakupannya, fitur seperti peringatan, kueri yang direkam, atau pelaporan tidak akan berfungsi seperti yang diharapkan. Silakan tinjau <2>dokumentasi</2> untuk detail selengkapnya.",
@@ -397,6 +397,12 @@
       "placeholder-region": "Opsional",
       "placeholder-resource-group": "Opsional",
       "title-error-occurred": "Terjadi kesalahan saat meminta metadata dari Azure Monitor"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }

@@ -89,26 +89,26 @@
       "label-enable-batch-api": "启用批量 API"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "日志超时（秒）",
+      "aria-label-metrics-timeout": "指标超时（秒）",
+      "aria-label-resource-graph-timeout": "资源图表超时（秒）",
       "description-additional-settings": "附加设置是可选设置，通过配置，可对数据源进行更精细的控制。这包括安全 Socks 代理、请求超时和转发的 Cookie。",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "日志和跟踪查询使用日志超时。",
+      "description-advanced-http-settings-metrics": "指标和 Azure 门户链接使用指标超时。",
+      "label-allowed-cookies": "允许的 Cookie",
+      "label-logs-timeout": "日志超时",
+      "label-metrics-timeout": "指标超时",
+      "label-resource-graph-timeout": "资源图表超时",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "新 Cookie（按 enter 键以添加）",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "附加设置",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "高级 HTTP 设置",
+      "tooltip-allowed-cookies": "Grafana 代理默认情况下会删除转发的 Cookie。按名称指定应转发到数据源的 Cookie。",
+      "tooltip-logs-timeout": "日志和跟踪查询的 HTTP 请求超时（秒）。默认值：180 秒（3 分钟）。",
+      "tooltip-metrics-timeout": "指标查询的 HTTP 请求超时（秒）。在构建 Azure 门户链接时也会使用。默认值：30 秒",
+      "tooltip-resource-graph-timeout": "资源图查询的 HTTP 请求超时（秒）。默认值：30 秒"
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "后备凭证已禁用。由于基于用户的身份验证本质上只支持用户范围内的请求，因此提醒、记录查询或报告等功能将无法按预期运行。请查看<2>文档</2>，了解更多详情。",
@@ -397,6 +397,12 @@
       "placeholder-region": "可选",
       "placeholder-resource-group": "可选",
       "title-error-occurred": "从 Azure Monitor 请求元数据时发生错误"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }

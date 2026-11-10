@@ -89,26 +89,26 @@
       "label-enable-batch-api": "Aktivera Batch-API"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "Tidsgräns för loggar i sekunder",
+      "aria-label-metrics-timeout": "Tidsgräns för mätvärden i sekunder",
+      "aria-label-resource-graph-timeout": "Tidsgräns för Resource Graph i sekunder",
       "description-additional-settings": "Ytterligare inställningar är valfria inställningar som kan konfigureras för att få mer kontroll över din datakälla. Detta inkluderar Secure Socks Proxy, tidsgräns för begäran och vidarebefordrade cookies.",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "Frågor för loggar och spårningar använder tidsgränsen för loggar.",
+      "description-advanced-http-settings-metrics": "Mätvärden och länkar till Azure Portal använder tidsgränsen för mätvärden.",
+      "label-allowed-cookies": "Tillåtna cookies",
+      "label-logs-timeout": "Tidsgräns för loggar",
+      "label-metrics-timeout": "Tidsgräns för mätvärden",
+      "label-resource-graph-timeout": "Tidsgräns för Resource Graph",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "Ny cookie (tryck på Enter om du vill lägga till)",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "Ytterligare inställningar",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "Avancerade HTTP-inställningar",
+      "tooltip-allowed-cookies": "Grafana-proxyn tar bort vidarebefordrade cookies som standard. Namnge de cookies som ska vidarebefordras till datakällan.",
+      "tooltip-logs-timeout": "Tidsgräns för HTTP-begäranden vid frågor för loggar och spårningar, i sekunder. Standardvärde: 180 s (3 minuter).",
+      "tooltip-metrics-timeout": "Tidsgräns för HTTP-begäranden vid frågor för mätvärden, i sekunder. Används även när länkar till Azure Portal skapas. Standardvärde: 30 s",
+      "tooltip-resource-graph-timeout": "Tidsgräns för HTTP-begäranden vid frågor för Resource Graph, i sekunder. Standardvärde: 30 s"
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "Reservautentiseringsuppgifter har inaktiverats. Eftersom användarbaserad autentisering i grunden endast stöder förfrågningar som är kopplade till en enskild användare kommer funktioner som aviseringar, registrerade frågor eller rapportering inte att fungera som förväntat. Läs <2>dokumentationen</2> för mer information.",
@@ -397,6 +397,12 @@
       "placeholder-region": "Valfritt",
       "placeholder-resource-group": "Valfritt",
       "title-error-occurred": "Ett fel uppstod vid begäran av metadata från Azure Monitor"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }

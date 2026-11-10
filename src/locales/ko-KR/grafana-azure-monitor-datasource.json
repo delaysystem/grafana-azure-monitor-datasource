@@ -89,26 +89,26 @@
       "label-enable-batch-api": "배치 API 활성화"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "로그 타임아웃(초 단위)",
+      "aria-label-metrics-timeout": "메트릭 타임아웃(초 단위)",
+      "aria-label-resource-graph-timeout": "리소스 그래프 타임아웃(초 단위)",
       "description-additional-settings": "추가 설정은 데이터 소스를 보다 세부적으로 제어하기 위해 구성할 수 있는 선택적 설정입니다. 여기에는 보안 Socks 프록시, 요청 시간 제한, 요청 위임(forwarded) 쿠키가 포함됩니다.",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "로그 및 추적 쿼리는 로그 타임아웃을 사용합니다.",
+      "description-advanced-http-settings-metrics": "메트릭 및 Azure Portal 링크는 메트릭 타임아웃을 사용합니다.",
+      "label-allowed-cookies": "허용된 쿠키",
+      "label-logs-timeout": "로그 타임아웃",
+      "label-metrics-timeout": "메트릭 타임아웃",
+      "label-resource-graph-timeout": "리소스 그래프 타임아웃",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "새 쿠키(엔터 키를 눌러 추가하세요)",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "추가 설정",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "고급 HTTP 설정",
+      "tooltip-allowed-cookies": "Grafana 프록시는 기본적으로 전달된 쿠키를 삭제합니다. 데이터 소스로 전달할 쿠키의 이름을 명시하세요.",
+      "tooltip-logs-timeout": "로그 및 추적 쿼리에 대한 HTTP 요청 타임아웃(초 단위). 기본값: 180초(3분).",
+      "tooltip-metrics-timeout": "메트릭 쿼리에 대한 HTTP 요청 타임아웃(초 단위). Azure Portal 링크를 구축할 때도 사용됩니다. 기본값: 30초",
+      "tooltip-resource-graph-timeout": "리소스 그래프 쿼리에 대한 HTTP 요청 타임아웃(초 단위). 기본값: 30초"
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "예비 자격 증명이 비활성화되었습니다. 사용자 기반 인증은 본질적으로 적용 범위 내의 사용자가 있는 요청만 지원하므로 알림, 기록된 쿼리 또는 보고와 같은 기능은 예상대로 작동하지 않습니다. 자세한 내용은 <2>문서</2>를 참고하세요.",
@@ -397,6 +397,12 @@
       "placeholder-region": "선택 사항",
       "placeholder-resource-group": "선택 사항",
       "title-error-occurred": "Azure Monitor에서 메타데이터를 요청하는 동안 오류가 발생했습니다"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }

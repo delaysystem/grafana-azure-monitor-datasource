@@ -89,26 +89,26 @@
       "label-enable-batch-api": "Activez l’API Batch"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "Délai d’expiration des journaux en secondes",
+      "aria-label-metrics-timeout": "Délai d’expiration des métriques en secondes",
+      "aria-label-resource-graph-timeout": "Délai d’expiration de Resource Graph en secondes",
       "description-additional-settings": "Les paramètres supplémentaires sont des options facultatives que vous pouvez configurer pour un meilleur contrôle de votre source de données. Cela inclut le proxy Secure Socks, le délai d’expiration des requêtes et les cookies transférés.",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "Les requêtes de journaux et de traces appliquent le délai d’expiration des journaux.",
+      "description-advanced-http-settings-metrics": "Les métriques et les liens vers Azure Portal appliquent le délai d’expiration des métriques.",
+      "label-allowed-cookies": "Cookies autorisés",
+      "label-logs-timeout": "Délai d’expiration des journaux",
+      "label-metrics-timeout": "Délai d’expiration des métriques",
+      "label-resource-graph-timeout": "Délai d’expiration de Resource Graph",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "Nouveau cookie (appuyez sur Entrée pour l’ajouter)",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "Paramètres supplémentaires",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "Paramètres HTTP avancés",
+      "tooltip-allowed-cookies": "Le proxy Grafana supprime par défaut les cookies transférés. Indiquez le nom des cookies qui doivent être transférés à la source de données.",
+      "tooltip-logs-timeout": "Délai d’expiration des requêtes HTTP pour les requêtes de journaux et de traces, en secondes. Par défaut : 180 s (3 minutes).",
+      "tooltip-metrics-timeout": "Délai d’expiration des requêtes HTTP pour les requêtes de métriques, en secondes. S’applique également à la création de liens vers Azure Portal. Par défaut : 30 s",
+      "tooltip-resource-graph-timeout": "Délai d’expiration des requêtes HTTP pour les requêtes Resource Graph, en secondes. Par défaut : 30 s"
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "Les identifiants de secours ont été désactivés. Étant donné que l’authentification basée sur l’utilisateur ne prend en charge que les demandes avec un utilisateur dans la portée, les fonctionnalités telles que les alertes, les requêtes enregistrées ou les rapports ne fonctionneront pas comme prévu. Veuillez consulter la <2>documentation</2> pour en savoir plus.",
@@ -210,9 +210,9 @@
       "confirmText-confirm": "Confirmer",
       "description-auxiliary-logs-queries": "Les requêtes d’Auxiliary Logs entraînent des coûts basés sur la quantité de données analysées. Les Auxiliary Logs n’ont pas de SLA de temps de réponse et ne doivent pas être utilisés pour des tableaux de bord nécessitant des données en temps réel ou pour les alertes.",
       "description-basic-logs-queries": "Les requêtes de journaux de base entraînent des coûts en fonction de la quantité de données analysées.",
-      "label-analytics": "",
-      "label-auxiliary": "",
-      "label-basic": "",
+      "label-analytics": "Analytics",
+      "label-auxiliary": "Auxiliary",
+      "label-basic": "Basic",
       "label-logs": "Journaux",
       "title-auxiliary-logs-queries": "Requêtes d’Auxiliary Logs",
       "title-basic-logs-queries": "Requêtes de journaux de base",
@@ -397,6 +397,12 @@
       "placeholder-region": "En option",
       "placeholder-resource-group": "En option",
       "title-error-occurred": "Une erreur s’est produite lors de la demande de métadonnées à Azure Monitor"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }

@@ -89,26 +89,26 @@
       "label-enable-batch-api": "Batch API'yi etkinleştir"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "Saniye cinsinden günlük zaman aşımı",
+      "aria-label-metrics-timeout": "Saniye cinsinden metrik zaman aşımı",
+      "aria-label-resource-graph-timeout": "Saniye cinsinden Resource Graph zaman aşımı",
       "description-additional-settings": "Ek ayarlar, veri kaynağınız üzerinde daha fazla denetim sağlamak için yapılandırabileceğiniz isteğe bağlı seçeneklerdir. Buna Secure SOCKS Proxy, istek zaman aşımı ve iletilen çerezler dâhildir.",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "Günlük ve İz sorguları, Günlük zaman aşımını kullanır.",
+      "description-advanced-http-settings-metrics": "Metrikler ve Azure Portal bağlantıları, Metrik zaman aşımını kullanır.",
+      "label-allowed-cookies": "İzin verilen çerezler",
+      "label-logs-timeout": "Günlük zaman aşımı",
+      "label-metrics-timeout": "Metrik zaman aşımı",
+      "label-resource-graph-timeout": "Resource Graph zaman aşımı",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "Yeni çerez (eklemek için Enter tuşuna basın)",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "Ek ayarlar",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "Gelişmiş HTTP ayarları",
+      "tooltip-allowed-cookies": "Grafana proxy, iletilen çerezleri varsayılan olarak siler. Veri kaynağına iletilmesi gereken çerezleri adlarıyla belirtin.",
+      "tooltip-logs-timeout": "Saniye cinsinden Günlük ve İz sorguları için HTTP isteği zaman aşımı. Varsayılan: 180 sn (3 dakika).",
+      "tooltip-metrics-timeout": "Saniye cinsinden Metrik sorguları için HTTP isteği zaman aşımı. Ayrıca Azure Portal bağlantıları oluşturulurken de kullanılır. Varsayılan: 30 sn",
+      "tooltip-resource-graph-timeout": "Saniye cinsinden Resource Graph sorguları için HTTP isteği zaman aşımı. Varsayılan: 30 sn"
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "Yedek kimlik bilgileri devre dışı bırakıldı. Kullanıcı tabanlı kimlik doğrulama doğası gereği yalnızca bir kullanıcının dâhil olduğu istekleri desteklediğinden uyarı, kayıtlı sorgular veya raporlama gibi özellikler beklendiği gibi çalışmayabilir. Daha fazla ayrıntı için lütfen <2>belgeleri</2> inceleyin.",
@@ -397,6 +397,12 @@
       "placeholder-region": "İsteğe bağlı",
       "placeholder-resource-group": "İsteğe bağlı",
       "title-error-occurred": "Azure Monitor'dan meta veriler istenirken bir hata oluştu"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }

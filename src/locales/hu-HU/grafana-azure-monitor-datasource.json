@@ -89,26 +89,26 @@
       "label-enable-batch-api": "Köteg-API engedélyezése"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "Naplók időtúllépése másodpercben",
+      "aria-label-metrics-timeout": "Metrikák időtúllépése másodpercben",
+      "aria-label-resource-graph-timeout": "Erőforrás-grafikon időtúllépése másodpercben",
       "description-additional-settings": "A további beállítások olyan opcionális beállítások, amelyek konfigurálhatók az adatforrás nagyobb mértékű ellenőrzése érdekében. Idetartozik a Secure Socks Proxy, a lekérdezési időtúllépés és a továbbított cookie-k.",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "A napló- és nyomkövetési lekérdezések a naplók időtúllépését használják.",
+      "description-advanced-http-settings-metrics": "A metrikák és az Azure Portal-hivatkozások a metrikák időtúllépését használják.",
+      "label-allowed-cookies": "Engedélyezett cookie-k",
+      "label-logs-timeout": "Naplók időtúllépése",
+      "label-metrics-timeout": "Metrikák időtúllépése",
+      "label-resource-graph-timeout": "Erőforrás-grafikon időtúllépése",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "Új cookie (nyomja le az Enter billentyűt a hozzáadáshoz)",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "További beállítások",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "Speciális HTTP-beállítások",
+      "tooltip-allowed-cookies": "A Grafana-proxy alapértelmezés szerint törli a továbbított cookie-kat. Adja meg az adatforráshoz továbbítandó cookie-kat név szerint.",
+      "tooltip-logs-timeout": "A napló- és nyomkövetési lekérdezések HTTP-kérelemének időtúllépése másodpercben. Alapértelmezett: 180 mp. (3 perc).",
+      "tooltip-metrics-timeout": "A metrikalekérdezések HTTP-kérelemének időtúllépése másodpercben. Ez használatos az Azure Portal-hivatkozások létrehozásakor is. Alapértelmezett: 30 mp.",
+      "tooltip-resource-graph-timeout": "Az erőforrásgrafikon-lekérdezések HTTP-kérelemének időtúllépése másodpercben. Alapértelmezett: 30 mp."
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "Az alapértelmezett hitelesítő adatok le lettek tiltva. Mivel a felhasználóalapú hitelesítés eredendően csak a hatókörben felhasználót tartalmazó kéréseket támogatja, az olyan funkciók, mint a riasztás, a rögzített lekérdezések vagy a jelentéskészítés nem fognak az elvárt módon működni. További részletekért tekintse át a <2>dokumentációt</2>.",
@@ -397,6 +397,12 @@
       "placeholder-region": "Opcionális",
       "placeholder-resource-group": "Opcionális",
       "title-error-occurred": "Hiba történt a metaadatok Azure Monitor szolgáltatásból történő lekérése során"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }

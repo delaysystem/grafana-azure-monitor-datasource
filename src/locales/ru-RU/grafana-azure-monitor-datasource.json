@@ -89,26 +89,26 @@
       "label-enable-batch-api": "Включить пакетный API"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "Время ожидания логов (в секундах)",
+      "aria-label-metrics-timeout": "Время ожидания метрик (в секундах)",
+      "aria-label-resource-graph-timeout": "Время ожидания графа ресурсов (в секундах)",
       "description-additional-settings": "Дополнительные параметры — это необязательные настройки, которые позволяют получить больший контроль над источником данных. К таким параметрам относятся Secure Socks Proxy, время ожидания запроса и пересылаемые файлы cookie.",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "Для запросов логов и трассировок используется время ожидания логов.",
+      "description-advanced-http-settings-metrics": "Для метрик и ссылок на портал Azure используется время ожидания метрик.",
+      "label-allowed-cookies": "Разрешенные файлы cookie",
+      "label-logs-timeout": "Время ожидания логов",
+      "label-metrics-timeout": "Время ожидания метрик",
+      "label-resource-graph-timeout": "Время ожидания графа ресурсов",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "Новый файл cookie (нажмите Enter, чтобы добавить)",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "Дополнительные параметры",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "Дополнительные параметры HTTP",
+      "tooltip-allowed-cookies": "Прокси-сервер Grafana по умолчанию удаляет пересылаемые файлы cookie. Укажите имена файлов cookie, которые следует переслать в источник данных.",
+      "tooltip-logs-timeout": "Время ожидания HTTP-запросов логов и трассировок (в секундах). По умолчанию: 180 с (3 минуты).",
+      "tooltip-metrics-timeout": "Время ожидания HTTP-запросов метрик (в секундах). Также используется при создании ссылок на портал Azure. По умолчанию: 30 с",
+      "tooltip-resource-graph-timeout": "Время ожидания HTTP-запросов графа ресурсов (в секундах). По умолчанию: 30 с"
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "Резервные учетные данные отключены. Поскольку аутентификация на основе пользователей по своей сути поддерживает только запросы, в область действия которых входит пользователь, то такие функции, как оповещение, записанные запросы или создание отчетов, не будут работать должным образом. Подробнее — в <2>документации</2>.",
@@ -397,6 +397,12 @@
       "placeholder-region": "Необязательно",
       "placeholder-resource-group": "Необязательно",
       "title-error-occurred": "Ошибка при запросе метаданных из Azure Monitor"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }

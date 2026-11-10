@@ -89,26 +89,26 @@
       "label-enable-batch-api": "Abilita API batch"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "Timeout dei registri in secondi",
+      "aria-label-metrics-timeout": "Timeout delle metriche in secondi",
+      "aria-label-resource-graph-timeout": "Timeout di Resource Graph in secondi",
       "description-additional-settings": "Le impostazioni aggiuntive sono opzionali e possono essere configurate per un maggiore controllo sull'origine dei dati. Ciò include Proxy Socks sicuro, timeout della richiesta e cookie inoltrati.",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "Le query dei registri e delle tracce utilizzano il timeout dei registri.",
+      "description-advanced-http-settings-metrics": "I collegamenti alle metriche e ad Azure Portal utilizzano il timeout delle metriche.",
+      "label-allowed-cookies": "Cookie consentiti",
+      "label-logs-timeout": "Timeout dei registri",
+      "label-metrics-timeout": "Timeout delle metriche",
+      "label-resource-graph-timeout": "Timeout di Resource Graph",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "Nuovo cookie (premi Invio per aggiungere)",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "Impostazioni aggiuntive",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "Impostazioni HTTP avanzate",
+      "tooltip-allowed-cookies": "Il proxy Grafana elimina i cookie inoltrati per impostazione predefinita. Specifica i cookie per nome che devono essere inoltrati all'origine dati.",
+      "tooltip-logs-timeout": "Timeout della richiesta HTTP per le query dei registri e delle tracce, in secondi. Impostazione predefinita: 180 s (3 minuti).",
+      "tooltip-metrics-timeout": "Timeout della richiesta HTTP per le query sulle metriche, in secondi. Utilizzato anche durante la creazione dei collegamenti ad Azure Portal. Impostazione predefinita: 30 s",
+      "tooltip-resource-graph-timeout": "Timeout della richiesta HTTP per le query di Resource Graph, in secondi. Impostazione predefinita: 30 s"
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "Le credenziali di fallback sono state disabilitate. Poiché l'autenticazione basata sull'utente supporta solo richieste con un utente nell'ambito, funzionalità come avvisi, query registrate o report non funzioneranno come previsto. Consulta la <2>documentazione</2> per ulteriori dettagli.",
@@ -397,6 +397,12 @@
       "placeholder-region": "Facoltativo",
       "placeholder-resource-group": "Facoltativo",
       "title-error-occurred": "Si è verificato un errore durante la richiesta di metadati da Azure Monitor"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }

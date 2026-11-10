@@ -89,26 +89,26 @@
       "label-enable-batch-api": "バッチAPIを有効にする"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "ログのタイムアウト（秒単位）",
+      "aria-label-metrics-timeout": "メトリクスのタイムアウト（秒単位）",
+      "aria-label-resource-graph-timeout": "リソースグラフのタイムアウト（秒単位）",
       "description-additional-settings": "追加設定は、データソースをより詳細に制御するために指定できるオプション設定です。これには、セキュアSOCKSプロキシ、リクエストタイムアウト、および転送されたCookieが含まれます。",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "ログとトレースのクエリは、ログのタイムアウトを使用します。",
+      "description-advanced-http-settings-metrics": "メトリクスとAzure Portalのリンクは、メトリクスのタイムアウトを使用します。",
+      "label-allowed-cookies": "許可されたクッキー",
+      "label-logs-timeout": "ログのタイムアウト",
+      "label-metrics-timeout": "メトリクスのタイムアウト",
+      "label-resource-graph-timeout": "リソースグラフのタイムアウト",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "新しいCookie（Enterキーを押して追加）",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "追加設定",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "高度なHTTP設定",
+      "tooltip-allowed-cookies": "Grafanaプロキシは、転送されたクッキーをデフォルトで削除します。データソースに転送するCookieを名前で指定します。",
+      "tooltip-logs-timeout": "ログとトレースのクエリに対するHTTPリクエストのタイムアウト（秒単位）。デフォルト：180秒（3分）。",
+      "tooltip-metrics-timeout": "メトリクスクエリに対するHTTPリクエストのタイムアウト（秒単位）。Azure Portalのリンクを作成する場合にも使用されます。デフォルト：30秒",
+      "tooltip-resource-graph-timeout": "リソースグラフのクエリに対するHTTPリクエストのタイムアウト（秒単位）。デフォルト：30秒"
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "フォールバック認証情報が無効になっています。ユーザーベース認証は、本質的にスコープ内のユーザーのリクエストのみをサポートするため、アラート、記録クエリ、レポートなどの機能は想定どおりに機能しません。詳細については、<2>ドキュメント</2>をご覧ください。",
@@ -397,6 +397,12 @@
       "placeholder-region": "オプション",
       "placeholder-resource-group": "オプション",
       "title-error-occurred": "Azure Monitorからメタデータをリクエスト中にエラーが発生しました"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }

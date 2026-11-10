@@ -54,7 +54,7 @@
       "reset-symbol-client-secret": "Resetten"
     },
     "auxiliary-logs-toggle": {
-      "aria-label-enable-auxiliary-logs": "",
+      "aria-label-enable-auxiliary-logs": "Auxiliary Logs",
       "description-auxiliary-logs": "Het inschakelen van deze functie brengt per-querykosten van Azure Monitor met zich mee voor dashboardpanelen die query's uitvoeren op tabellen die zijn geconfigureerd voor <2>Auxiliary Logs</2>. Auxiliary logs hebben geen SLA's voor responstijd, zijn alleen bedoeld voor ad-hocquery's en gegevensverkenning en mogen niet worden gebruikt voor dashboards die realtime gegevens vereisen of voor waarschuwingen.",
       "label-enable-auxiliary-logs": "Auxiliary Logs inschakelen"
     },
@@ -89,26 +89,26 @@
       "label-enable-batch-api": "Batch-API inschakelen"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "Time-out van logs in seconden",
+      "aria-label-metrics-timeout": "Time-out van metrics in seconden",
+      "aria-label-resource-graph-timeout": "Time-out van Resource Graph in seconden",
       "description-additional-settings": "Aanvullende instellingen zijn optioneel en geven je meer controle over je databron. Denk hierbij aan Secure Socks Proxy, request timeout en doorgestuurde cookies.",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "Query's voor logs en traceringen gebruiken de time-out voor logs.",
+      "description-advanced-http-settings-metrics": "Metrics en Azure Portal-links gebruiken de time-out van metrics.",
+      "label-allowed-cookies": "Toegestane cookies",
+      "label-logs-timeout": "Time-out van logs",
+      "label-metrics-timeout": "Time-out van metrics",
+      "label-resource-graph-timeout": "Time-out van Resource Graph",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "Nieuw cookie (druk op enter om toe te voegen)",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "Aanvullende instellingen",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "Geavanceerde HTTP-instellingen",
+      "tooltip-allowed-cookies": "Grafana-proxy verwijdert standaard doorgestuurde cookies. Geef de namen op van de cookies die naar de databron moeten worden doorgestuurd.",
+      "tooltip-logs-timeout": "HTTP-verzoek time-out voor Logs- en Traces-query's, in seconden. Standaard: 180 sec. (3 minuten).",
+      "tooltip-metrics-timeout": "HTTP-verzoek time-out voor Metrics-query’s, in seconden. Wordt ook gebruikt bij het maken van Azure Portal-links. Standaard: 30 sec.",
+      "tooltip-resource-graph-timeout": "HTTP-verzoek time-out voor Resource Graph-query's, in seconden. Standaard: 30 sec."
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "Fallback-inloggegevens zijn uitgeschakeld. Omdat op gebruikers gebaseerde authenticatie alleen inherent verzoeken met een gebruiker in het bereik ondersteunt, werken functies zoals waarschuwingen, opgenomen query's of rapportage niet zoals verwacht. Bekijk de <2>documentatie</2> voor meer informatie.",
@@ -210,9 +210,9 @@
       "confirmText-confirm": "Bevestigen",
       "description-auxiliary-logs-queries": "Aan query's op Auxiliary Logs zijn kosten verbonden op basis van de hoeveelheid gescande gegevens. Auxiliary Logs hebben geen SLA's voor reactietijden en mogen niet worden gebruikt voor dashboards die realtime gegevens nodig hebben of voor waarschuwingen.",
       "description-basic-logs-queries": "Basislogquery's brengen kosten met zich mee op basis van de hoeveelheid gescande gegevens.",
-      "label-analytics": "",
-      "label-auxiliary": "",
-      "label-basic": "",
+      "label-analytics": "Analytics",
+      "label-auxiliary": "Auxiliary",
+      "label-basic": "Basic",
       "label-logs": "Logs",
       "title-auxiliary-logs-queries": "Auxiliary Logs-query's",
       "title-basic-logs-queries": "Basislogquery's",
@@ -397,6 +397,12 @@
       "placeholder-region": "Optioneel",
       "placeholder-resource-group": "Optioneel",
       "title-error-occurred": "Er is een fout opgetreden bij het aanvragen van de metagegevens van Azure Monitor"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }

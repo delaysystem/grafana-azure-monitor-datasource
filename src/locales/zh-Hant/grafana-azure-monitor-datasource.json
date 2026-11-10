@@ -89,26 +89,26 @@
       "label-enable-batch-api": "啟用批次 API"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "記錄逾時秒數",
+      "aria-label-metrics-timeout": "指標逾時秒數",
+      "aria-label-resource-graph-timeout": "資源圖表逾時秒數",
       "description-additional-settings": "附加設定為選擇性設定，可進行設定以便更妥善掌控您的資料來源。這包括安全 Socks 代理伺服器、要求逾時和轉寄的 Cookie。",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "「記錄」和「追蹤」查詢使用「記錄」逾時。",
+      "description-advanced-http-settings-metrics": "「指標」和「Azure 入口網站」連結使用「指標」逾時。",
+      "label-allowed-cookies": "允許的 Cookie",
+      "label-logs-timeout": "記錄逾時",
+      "label-metrics-timeout": "指標逾時",
+      "label-resource-graph-timeout": "資源圖表逾時",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "新的 Cookie（按 Enter 鍵新增）",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "附加設定",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "進階 HTTP 設定",
+      "tooltip-allowed-cookies": "Grafana 代理伺服器預設會刪除轉寄的 Cookie。按名稱指定應轉寄到資料來源的 Cookie。",
+      "tooltip-logs-timeout": "「記錄」和「追蹤」查詢的 HTTP 請求逾時（秒）。預設值：180 秒（3 分鐘）。",
+      "tooltip-metrics-timeout": "「指標」查詢的 HTTP 請求逾時（秒）。在建立 Azure 入口網站連結時也會使用。預設值：30 秒",
+      "tooltip-resource-graph-timeout": "「資源圖表」查詢的 HTTP 請求逾時（秒）。預設值：30 秒"
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "備用憑證已停用。由於使用者型驗證本質上僅支援範圍內的使用者請求，因此警示、已記錄查詢或報告等功能將無法按預期運作。請查看<2>文件</2>，了解更多詳細資訊。",
@@ -397,6 +397,12 @@
       "placeholder-region": "選填",
       "placeholder-resource-group": "選填",
       "title-error-occurred": "從 Azure Monitor 請求中繼資料時發生錯誤"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }

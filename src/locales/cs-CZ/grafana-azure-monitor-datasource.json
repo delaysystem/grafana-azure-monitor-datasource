@@ -89,26 +89,26 @@
       "label-enable-batch-api": "Povolit dávkové API"
     },
     "config-editor": {
-      "aria-label-logs-timeout": "",
-      "aria-label-metrics-timeout": "",
-      "aria-label-resource-graph-timeout": "",
+      "aria-label-logs-timeout": "Časový limit protokolů v sekundách",
+      "aria-label-metrics-timeout": "Časový limit metrik v sekundách",
+      "aria-label-resource-graph-timeout": "Časový limit grafu zdrojů v sekundách",
       "description-additional-settings": "Další nastavení jsou volitelná nastavení, která lze nakonfigurovat pro větší kontrolu nad zdrojem dat. Patří sem zabezpečený proxy server Socks, časový limit požadavku a přeposlané soubory cookie.",
-      "description-advanced-http-settings-logs": "",
-      "description-advanced-http-settings-metrics": "",
-      "label-allowed-cookies": "",
-      "label-logs-timeout": "",
-      "label-metrics-timeout": "",
-      "label-resource-graph-timeout": "",
-      "placeholder-logs-timeout": "",
-      "placeholder-metrics-timeout": "",
-      "placeholder-new-cookie": "",
-      "placeholder-resource-graph-timeout": "",
+      "description-advanced-http-settings-logs": "Dotazy protokolů a trasování používají časový limit protokolů.",
+      "description-advanced-http-settings-metrics": "Odkazy na metriky a Azure Portal používají časový limit metrik.",
+      "label-allowed-cookies": "Povolené soubory cookie",
+      "label-logs-timeout": "Časový limit protokolů",
+      "label-metrics-timeout": "Časový limit metrik",
+      "label-resource-graph-timeout": "Časový limit grafu zdrojů",
+      "placeholder-logs-timeout": "180",
+      "placeholder-metrics-timeout": "30",
+      "placeholder-new-cookie": "Nový soubor cookie (pro přidání stiskněte Enter)",
+      "placeholder-resource-graph-timeout": "30",
       "title-additional-settings": "Další nastavení",
-      "title-advanced-http-settings": "",
-      "tooltip-allowed-cookies": "",
-      "tooltip-logs-timeout": "",
-      "tooltip-metrics-timeout": "",
-      "tooltip-resource-graph-timeout": ""
+      "title-advanced-http-settings": "Pokročilá nastavení HTTP",
+      "tooltip-allowed-cookies": "Proxy server Grafana ve výchozím nastavení odstraňuje předané soubory cookie. Zadejte soubory cookie podle názvu, které by měly být přeposlány do zdroje dat.",
+      "tooltip-logs-timeout": "Časový limit požadavku HTTP pro dotazy protokolů a trasování (v sekundách). Výchozí hodnota: 180 s (3 minuty).",
+      "tooltip-metrics-timeout": "Časový limit požadavku HTTP pro dotazy na metriky (v sekundách). Používá se také při vytváření odkazů na Azure Portal. Výchozí hodnota: 30 s",
+      "tooltip-resource-graph-timeout": "Časový limit požadavku HTTP pro dotazy na graf zdrojů (v sekundách). Výchozí hodnota: 30 s"
     },
     "current-user-fallback-credentials": {
       "alert-fallback-credentials-disabled": "Záložní přihlašovací údaje byly zakázány. Vzhledem k tomu, že ověření uživatele samo o sobě podporuje pouze požadavky s uživatelem v rozsahu, funkce, jako je upozorňování, zaznamenané dotazy nebo vykazování, nebudou fungovat podle očekávání. Další podrobnosti najdete v <2>dokumentaci</2>.",
@@ -397,6 +397,12 @@
       "placeholder-region": "Nepovinný",
       "placeholder-resource-group": "Nepovinný",
       "title-error-occurred": "Při požadování metadat ze služby Azure Monitor došlo k chybě"
+    },
+    "workload-identity-credentials": {
+      "aria-label-client-id": "",
+      "aria-label-tenant-id": "",
+      "label-client-id": "",
+      "label-tenant-id": ""
     }
   }
 }
